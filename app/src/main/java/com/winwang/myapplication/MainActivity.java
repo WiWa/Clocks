@@ -2,16 +2,61 @@ package com.winwang.myapplication;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
+import java.util.Vector;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ListView list = (ListView) findViewById(R.id.EventsList);
+        list.setClickable(true);
+
+        final List<Event> eventsList= new Vector<Event>();
+        eventsList.add(new Event());
+        eventsList.add(new Event("Test1", "1234455"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+
+        EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+                System.out.println("sadsfsf");
+                showToast(eventsList.get(position).getName());
+            }
+        });
+
+        list.setAdapter(adapter);
+
+        Log.d(TAG, "Main Activity Created :3");
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 
