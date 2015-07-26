@@ -7,8 +7,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="match_parent"
+    <TextView android:text="@string/hello_world" android:textStyle="bold" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/clockPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/square_image"
+        android:background="#00ff00"
+        />
     <ListView
         android:id="@+id/EventsList"
         android:layout_width="match_parent"
