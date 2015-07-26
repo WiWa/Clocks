@@ -1,14 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:textStyle="bold" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <TextView android:id="@+id/tvHW" android:text="@string/hello_world" android:textStyle="bold" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <ImageButton
         android:id="@+id/clockPlaceholder"
         android:layout_width="match_parent"
@@ -16,10 +17,28 @@
         android:scaleType="centerInside"
         android:src="@drawable/square_image"
         android:background="#00ff00"
+        android:layout_below="@id/tvHW"
         />
     <ListView
         android:id="@+id/EventsList"
         android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:layout_below="@id/clockPlaceholder"
+        >
     </ListView>
-</LinearLayout>
+
+    <Button
+        android:id="@+id/btnCreateEvent"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="24dp"
+        android:text="+"
+        android:textColor="#ffffff"
+        android:textSize="32dp"
+        android:background="@drawable/round_button"
+        />
+</RelativeLayout>

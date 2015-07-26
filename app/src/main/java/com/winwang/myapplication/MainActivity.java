@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -46,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
                 System.out.println("sadsfsf");
-                showToast(eventsList.get(position).getName());
+                    showToast(eventsList.get(position).getName() + ", " + String.valueOf(index));
             }
         });
 
