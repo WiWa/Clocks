@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,34 +25,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView list = (ListView) findViewById(R.id.EventsList);
-        list.setClickable(true);
+       initEventsList();
 
-        final List<Event> eventsList= new Vector<Event>();
-        eventsList.add(new Event());
-        eventsList.add(new Event("Test1", "1234455"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-
-        EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-                System.out.println("sadsfsf");
-                    showToast(eventsList.get(position).getName() + ", " + String.valueOf(index));
-            }
-        });
-
-        list.setAdapter(adapter);
+        initCreateButton();
 
         Log.d(TAG, "Main Activity Created :3");
     }
@@ -81,5 +57,46 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initEventsList(){
+        ListView list = (ListView) findViewById(R.id.EventsList);
+        list.setClickable(true);
+
+        final List<Event> eventsList= new Vector<Event>();
+        eventsList.add(new Event());
+        eventsList.add(new Event("Test1", "1234455"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test2", "00000"));
+
+        EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+                System.out.println("sadsfsf");
+                showToast(eventsList.get(position).getName() + ", " + String.valueOf(index));
+            }
+        });
+
+        list.setAdapter(adapter);
+    }
+
+    public void initCreateButton(){
+        ((Button) findViewById(R.id.btnCreateEvent)).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Creation Button!! :  btnCreateEvent");
+            }
+        });
     }
 }
