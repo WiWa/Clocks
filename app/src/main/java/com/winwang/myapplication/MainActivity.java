@@ -140,6 +140,11 @@ public class MainActivity extends ActionBarActivity {
                             }
                         });
                 AlertDialog dialog = builder.create();
+
+                LinearLayout dialogLayout = (LinearLayout) findViewById(R.id.linlayCreate);
+                LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = inflater.inflate(R.layout.creation_popup, dialogLayout, true);
+                dialog.setView(dialogView);
                 dialog.show();
 
             }
