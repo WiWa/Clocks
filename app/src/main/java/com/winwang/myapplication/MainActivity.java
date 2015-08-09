@@ -1,14 +1,22 @@
 package com.winwang.myapplication;
 
+import android.app.ActionBar;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.util.List;
@@ -25,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       initEventsList();
+        initEventsList();
 
         initCreateButton();
 
@@ -91,12 +99,66 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void initCreateButton(){
-        ((Button) findViewById(R.id.btnCreateEvent)).setOnClickListener(new View.OnClickListener(){
+        final Button btnCreateEvent, btnCreateConfirm, btnCreateCancel;
+        final LinearLayout popupLayout;
+        /*
+        final PopupWindow popupCreateEvent;
 
+
+        popupLayout = (LinearLayout) findViewById(R.id.linlayCreate);
+        LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.creation_popup, popupLayout, true);
+
+        popupCreateEvent = new PopupWindow(popupView, ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        popupCreateEvent.setContentView(popupView);
+        popupCreateEvent.setFocusable(true);
+*/
+        btnCreateEvent = (Button) findViewById(R.id.btnCreateEvent);
+  //      btnCreateConfirm = (Button) popupView.findViewById(R.id.btnCreateConfirm);
+  //      btnCreateCancel = (Button) popupView.findViewById(R.id.btnCreateCancel);
+
+
+        btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Creation Button!! :  btnCreateEvent");
+                //popupCreateEvent.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+                // Use the Builder class for convenient dialog construction
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("New Event")
+                        .setMessage("Dialog Message!")
+                        .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Log.d(TAG, "Create Confirm");
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                                Log.d(TAG, "Create Cancel");
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
         });
+/*
+        btnCreateCancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Cancel Button!");
+                popupCreateEvent.dismiss();
+            }
+        });
+
+        btnCreateConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Confirm Button!");
+            }
+        });
+*/
     }
 }
