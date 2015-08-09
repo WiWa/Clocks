@@ -14,11 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
@@ -125,26 +129,35 @@ public class MainActivity extends ActionBarActivity {
                 //popupCreateEvent.showAtLocation(popupView, Gravity.CENTER, 0, 0);
                 // Use the Builder class for convenient dialog construction
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("New Event")
-                        .setMessage("Dialog Message!")
-                        .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Log.d(TAG, "Create Confirm");
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
-                                Log.d(TAG, "Create Cancel");
-                                dialog.cancel();
-                            }
-                        });
                 AlertDialog dialog = builder.create();
 
                 LinearLayout dialogLayout = (LinearLayout) findViewById(R.id.linlayCreate);
                 LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View dialogView = inflater.inflate(R.layout.creation_popup, dialogLayout, true);
                 dialog.setView(dialogView);
+
+                final EditText eventName = (EditText) dialogView.findViewById(R.id.etCreateEventName);
+                final EditText eventDescription = (EditText) dialogView.findViewById(R.id.etCreateEventDescription);
+                final DatePicker eventDate = (DatePicker) dialogView.findViewById(R.id.CreateEventDatePicker);
+                final TimePicker eventTime = (TimePicker) dialogView.findViewById(R.id.CreateEventTimePicker);
+                eventName.setText("Sample Name");
+                dialog.setTitle("New Event");
+                dialog.setMessage("Name and Date are required fields.");
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Create", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "Create Confirm, Name: " + eventName.getText().toString());
+                    }
+                });
+                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "Create Cancel");
+                        dialog.cancel();
+                    }
+                });
+
+
                 dialog.show();
 
             }
