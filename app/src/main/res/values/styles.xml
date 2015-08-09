@@ -5,10 +5,8 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="CreateEventDialogTheme" parent="android:Theme" >
-        <item name="android:windowNoTitle">true</item>
+    <style name="CreateEventDialogTheme" parent="AppTheme" >
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsFloating">false</item>
     </style>
 
 </resources>

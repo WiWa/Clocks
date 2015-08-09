@@ -1,9 +1,11 @@
 package com.winwang.myapplication;
 
 import android.app.ActionBar;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -35,6 +37,7 @@ import java.util.Vector;
 public class MainActivity extends ActionBarActivity {
 
     String TAG = "MainActivity";
+    final List<Event> eventsList= new Vector<Event>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +82,10 @@ public class MainActivity extends ActionBarActivity {
         ListView list = (ListView) findViewById(R.id.EventsList);
         list.setClickable(true);
 
-        final List<Event> eventsList= new Vector<Event>();
         eventsList.add(new Event());
         eventsList.add(new Event("Test1", "1234455"));
         eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
-        eventsList.add(new Event("Test2", "00000"));
+        eventsList.add(new Event("Test3", "1234567890"));
 
         EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
 
@@ -124,9 +119,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Creation Button!! :  btnCreateEvent");
+
+                Intent createEventIntent = new Intent(MainActivity.this, CreateEventActivity.class);
+                startActivityForResult(createEventIntent, 0);
                 //popupCreateEvent.showAtLocation(popupView, Gravity.CENTER, 0, 0);
                 // Use the Builder class for convenient dialog construction
-
+/*
                 LinearLayout dialogLayout = (LinearLayout) findViewById(R.id.linlayCreate);
                 LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View dialogView = inflater.inflate(R.layout.creation_popup, dialogLayout, true);
@@ -136,8 +134,9 @@ public class MainActivity extends ActionBarActivity {
 //                final DatePicker eventDate = (DatePicker) dialogView.findViewById(R.id.CreateEventDatePicker);
 //                final TimePicker eventTime = (TimePicker) dialogView.findViewById(R.id.CreateEventTimePicker);
                 eventName.setText("Sample Name");
+                */
 
-
+                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("New Event")
                 .setMessage("Name and Date are required fields.")
@@ -164,15 +163,37 @@ public class MainActivity extends ActionBarActivity {
                 dialog.show();
 
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                /*
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                CreateEventDialogFragment frag = new CreateEventDialogFragment();
-                frag.show(ft, "txn_tag");
                 */
+                /*
+                FragmentManager fm = getFragmentManager();
+                CreateEventDialogFragment frag = new CreateEventDialogFragment();
+                //frag.show(ft, "txn_tag");
+                FragmentTransaction ft = fm.beginTransaction();
+                // For a little polish, specify a transition animation
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                // To make it fullscreen, use the 'content' root view as the container
+                // for the fragment, which is always the root view for the activity
+                ft.add(android.R.id.content, frag)
+                        .addToBackStack(null).commit();
+                */
+
 
             }
         });
 
     }
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                // A contact was picked.  Here we will just display it
+                // to the user.
+                String event_name = data.getExtras().getString("event_name");
+                Log.d(TAG, "Success!! :  " + event_name);
+                Event new_event = new Event(event_name, "Returned from creation");
+                eventsList.add(0,new_event);
+            }
+        }
+    }
+
 }
