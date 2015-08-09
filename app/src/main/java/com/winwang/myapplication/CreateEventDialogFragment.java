@@ -18,6 +18,12 @@ public class CreateEventDialogFragment extends DialogFragment {
     final String TAG = "Event Creation Dialog";
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CreateEventDialogTheme);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         // Use the Builder class for convenient dialog construction
