@@ -74,6 +74,10 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_myitem) {
+            Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
+            startActivity(googleCalendarIntent);
+        }
 
         return super.onOptionsItemSelected(item);
     }
