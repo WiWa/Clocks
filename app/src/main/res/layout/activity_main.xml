@@ -10,21 +10,24 @@
     <TextView android:id="@+id/tvHW" android:text="@string/hello_world" android:textStyle="bold" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-    <ImageButton
-        android:id="@+id/clockPlaceholder"
+
+    <AnalogClock
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/square_image"
-        android:background="#00ff00"
-        android:layout_below="@id/tvHW"
-        />
+        android:layout_height="220dp"
+        android:id="@+id/analogClock"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/tvHW"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
     <ListView
         android:id="@+id/EventsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="10dp"
-        android:layout_below="@id/clockPlaceholder"
+        android:layout_below="@id/analogClock"
         >
     </ListView>
 
@@ -41,16 +44,5 @@
         android:textSize="32dp"
         android:background="@drawable/round_button"
         />
-
-    <AnalogClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/analogClock"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/EventsList"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
