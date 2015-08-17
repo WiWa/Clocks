@@ -13,7 +13,7 @@
 
     <AnalogClock
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="260dp"
         android:id="@+id/analogClock"
         android:layout_alignParentTop="true"
         android:layout_below="@+id/tvHW"
@@ -21,6 +21,20 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <com.winwang.myapplication.DonutsVisualization
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:id="@+id/dvClocks"
+
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/tvHW"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        />
 
     <ListView
         android:id="@+id/EventsList"

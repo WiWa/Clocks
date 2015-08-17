@@ -6,6 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
     final List<Event> eventsList= new Vector<Event>();
     ListView mListView;
     EventsAdapter mEventsAdapter;
+    DonutsVisualization mDonuts;
 
     static final int CREATE_NEW_EVENT = 0;
     static final int GOOGLE_CALENDAR_EVENTS = 1;
@@ -50,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         initEventsList();
-
+        initClocks();
         initCreateButton();
 
         Log.d(TAG, "Main Activity Created :3");
@@ -85,6 +89,16 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initClocks(){
+/*
+        ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParhow to pass
+        lp.width = 200;
+        lp.height = 400
+        mDonuts = new DonutsVisualization(MainActivity.this, )
+*/
+        mDonuts = (DonutsVisualization) findViewById(R.id.dvClocks);
     }
 
     public void initEventsList(){
@@ -136,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivityForResult(createEventIntent, CREATE_NEW_EVENT);
                 //popupCreateEvent.showAtLocation(popupView, Gravity.CENTER, 0, 0);
                 // Use the Builder class for convenient dialog construction
-/*
+/*super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 LinearLayout dialogLayout = (LinearLayout) findViewById(R.id.linlayCreate);
                 LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View dialogView = inflater.inflate(R.layout.creation_popup, dialogLayout, true);
