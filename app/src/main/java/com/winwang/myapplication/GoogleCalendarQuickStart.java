@@ -24,9 +24,12 @@ package com.winwang.myapplication;
         import android.os.Bundle;
         import android.text.TextUtils;
         import android.text.method.ScrollingMovementMethod;
+        import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.Button;
         import android.widget.LinearLayout;
         import android.widget.TextView;
+        import android.widget.Toast;
 
         import java.util.Arrays;
         import java.util.List;
@@ -42,6 +45,11 @@ public class GoogleCalendarQuickStart extends Activity {
     GoogleAccountCredential credential;
     private TextView mStatusText;
     private TextView mResultsText;
+
+    private Button mReturnResults;
+    private boolean mDataReceived = false;
+    private List<com.google.api.services.calendar.model.Event> mEvents;
+
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -82,6 +90,24 @@ public class GoogleCalendarQuickStart extends Activity {
         mResultsText.setVerticalScrollBarEnabled(true);
         mResultsText.setMovementMethod(new ScrollingMovementMethod());
         activityLayout.addView(mResultsText);
+
+        mReturnResults = new Button(this);
+        mReturnResults.setLayoutParams(tlp);
+        mReturnResults.setPadding(16, 16, 16, 16);
+        mReturnResults.setText("Load Events");
+        activityLayout.addView(mReturnResults);
+
+        mReturnResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDataReceived){
+                    Toast.makeText(GoogleCalendarQuickStart.this, "Events Loaded", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(GoogleCalendarQuickStart.this, "Cannot Load Events", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         setContentView(activityLayout);
 
@@ -286,6 +312,11 @@ public class GoogleCalendarQuickStart extends Activity {
                 dialog.show();
             }
         });
+    }
+
+    public void setEvents(List<com.google.api.services.calendar.model.Event> items){
+        mEvents = items;
+        mDataReceived = true;
     }
 
 }

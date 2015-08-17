@@ -70,6 +70,8 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
                 .execute();
         List<com.google.api.services.calendar.model.Event> items = events.getItems();
 
+        mActivity.setEvents(items);
+
         for (com.google.api.services.calendar.model.Event event : items) {
             DateTime start = event.getStart().getDateTime();
             if (start == null) {
