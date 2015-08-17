@@ -1,5 +1,6 @@
 package com.winwang.myapplication;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -12,11 +13,35 @@ public class Event{
     private Date startDate;
     private Date endDate;
 
+    Event(){
+        name = "Unnamed Event";
+        description = "No Description";
+        startDate = new Date();
+        endDate = new Date();
+
+        // Add one day.
+        Calendar c = Calendar.getInstance();
+        c.setTime(endDate);
+        c.add(Calendar.DATE, 1);
+        endDate = c.getTime();
+    }
+
     Event(eventParcelable event){
         name = event.getmSummary();
         description = event.getmDescription();
         startDate = new Date(event.getmStartTime());
         endDate = new Date(event.getmEndTime());
+    }
+
+    public String toString(){
+        String eventString = "Event{ ";
+
+        eventString += "name: " + name + ", ";
+        eventString += "description: " + description + ", ";
+        eventString += "start: " + startDate.toString() + ", ";
+        eventString += "end: " + endDate.toString() + " }";
+
+        return eventString;
     }
 
     public void setName(String name) {

@@ -38,7 +38,8 @@ public class MainActivity extends ActionBarActivity {
 
     String TAG = "MainActivity";
     final List<Event> eventsList= new Vector<Event>();
-
+    ListView mListView;
+    EventsAdapter adapter;
 
     static final int CREATE_NEW_EVENT = 0;
     static final int GOOGLE_CALENDAR_EVENTS = 1;
@@ -87,19 +88,20 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void initEventsList(){
-        ListView list = (ListView) findViewById(R.id.EventsList);
-        list.setClickable(true);
+        mListView = (ListView) findViewById(R.id.EventsList);
+        mListView.setClickable(true);
 
-        /*
+
         eventsList.add(new Event());
+        /*
         eventsList.add(new Event("Test1", "1234455"));
         eventsList.add(new Event("Test2", "00000"));
         eventsList.add(new Event("Test3", "1234567890"));
         */
 
-        EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
+        adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -108,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        list.setAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
 
     public int pxToDp(int pix){
@@ -209,13 +211,27 @@ public class MainActivity extends ActionBarActivity {
                 // A contact was picked.  Here we will just display it
                 // to the user.
                 //String event_name = data.getExtras().getString("events");
-                Parcelable[] events = data.getExtras().getParcelableArray("events");
-                Log.d(TAG, "Google Events Received:  " + events);
-                for(Parcelable uncastEvent : events){
-                    eventParcelable eventParcelable = (eventParcelable) uncastEvent;
-                    Log.d(TAG, "GOOGLE EVENT DATA: " + eventParcelable.toString());
-                    eventsList.add(new Event(eventParcelable));
+                Parcelable[] uncastevents = data.getExtras().getParcelableArray("events");
+                final List<Event> events = new Vector<Event>();
+                Log.d(TAG, "Google Events Received:  " + uncastevents);
+
+                for(Parcelable uncastEvent : uncastevents){
+                    Event event = new Event((eventParcelable) uncastEvent);
+                    Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
+                    //eventsList.add(0, event);
+                    events.add(event);
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Event event : events){
+                            eventsList.add(0, event);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
             }
         }
     }

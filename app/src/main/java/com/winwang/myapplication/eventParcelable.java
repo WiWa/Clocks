@@ -19,14 +19,36 @@ public class eventParcelable implements Parcelable{
     //// the data structure.
     public eventParcelable(com.google.api.services.calendar.model.Event event) {
         mSummary = event.getSummary();
-        mDescription = event.getDescription();
-        mStartTime = event.getStart().getDateTime().getValue();
-        if(event.isEndTimeUnspecified()){
-            mEndTime = 0;
+        if(event.getDescription() != null){
+            mDescription = event.getDescription();
         }
         else{
+            mDescription = "No Description";
+        }
+        if(event.getStart().getDateTime() != null){
+            mStartTime = event.getStart().getDateTime().getValue();
+        }
+        else if(event.getStart().getDate() != null){
+            mStartTime = event.getStart().getDate().getValue();
+        }
+        else{
+            mStartTime = 0;
+        }
+        if(event.getEnd().getDateTime() != null){
             mEndTime = event.getEnd().getDateTime().getValue();
         }
+        else if(event.getEnd().getDate() != null){
+            mEndTime = event.getEnd().getDate().getValue();
+        }
+        else{
+            mEndTime = 0;
+        }
+//        if(event.isEndTimeUnspecified()){
+//            mEndTime = 0;
+//        }
+//        else{
+//            mEndTime = event.getEnd().getDate().getValue();
+//        }
     }
 
     private eventParcelable(Parcel in){
