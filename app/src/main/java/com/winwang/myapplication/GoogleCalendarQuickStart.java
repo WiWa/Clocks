@@ -11,6 +11,8 @@ package com.winwang.myapplication;
 
 
         import com.google.api.services.calendar.CalendarScopes;
+        import com.google.api.services.calendar.model.*;
+        import com.google.api.services.calendar.model.Event;
 
         import android.accounts.AccountManager;
         import android.app.Activity;
@@ -22,6 +24,8 @@ package com.winwang.myapplication;
         import android.net.ConnectivityManager;
         import android.net.NetworkInfo;
         import android.os.Bundle;
+        import android.os.Parcel;
+        import android.os.Parcelable;
         import android.text.TextUtils;
         import android.text.method.ScrollingMovementMethod;
         import android.view.View;
@@ -102,6 +106,7 @@ public class GoogleCalendarQuickStart extends Activity {
             public void onClick(View v) {
                 if(mDataReceived){
                     Toast.makeText(GoogleCalendarQuickStart.this, "Events Loaded", Toast.LENGTH_SHORT).show();
+                    returnResults();
                 }
                 else{
                     Toast.makeText(GoogleCalendarQuickStart.this, "Cannot Load Events", Toast.LENGTH_SHORT).show();
@@ -318,5 +323,25 @@ public class GoogleCalendarQuickStart extends Activity {
         mEvents = items;
         mDataReceived = true;
     }
+
+    private void returnResults(){
+        Intent resultIntent = new Intent();
+        Bundle b = new Bundle();
+
+        eventParcelable[] events = new eventParcelable[mEvents.size()];
+        int i = 0;
+        for(com.google.api.services.calendar.model.Event event : mEvents){
+            eventParcelable parsedEvent = new eventParcelable(event);
+            events[i] = parsedEvent;
+            i++;
+        }
+
+        b.putParcelableArray("events", events);
+
+        resultIntent.putExtras(b);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+
 
 }

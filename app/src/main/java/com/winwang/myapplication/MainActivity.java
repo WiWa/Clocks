@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -38,6 +39,10 @@ public class MainActivity extends ActionBarActivity {
 
     String TAG = "MainActivity";
     final List<Event> eventsList= new Vector<Event>();
+
+
+    static final int CREATE_NEW_EVENT = 0;
+    static final int GOOGLE_CALENDAR_EVENTS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
         }
         if (id == R.id.action_myitem) {
             Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
-            startActivity(googleCalendarIntent);
+            startActivityForResult(googleCalendarIntent, GOOGLE_CALENDAR_EVENTS);
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,7 +130,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "Creation Button!! :  btnCreateEvent");
 
                 Intent createEventIntent = new Intent(MainActivity.this, CreateEventActivity.class);
-                startActivityForResult(createEventIntent, 0);
+                startActivityForResult(createEventIntent, CREATE_NEW_EVENT);
                 //popupCreateEvent.showAtLocation(popupView, Gravity.CENTER, 0, 0);
                 // Use the Builder class for convenient dialog construction
 /*
@@ -188,7 +193,7 @@ public class MainActivity extends ActionBarActivity {
     }
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
-        if (requestCode == 0) {
+        if (requestCode == CREATE_NEW_EVENT) {
             if (resultCode == RESULT_OK) {
                 // A contact was picked.  Here we will just display it
                 // to the user.
@@ -196,6 +201,19 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "Success!! :  " + event_name);
                 Event new_event = new Event(event_name, "Returned from creation");
                 eventsList.add(0,new_event);
+            }
+        }
+        if (requestCode == GOOGLE_CALENDAR_EVENTS) {
+            if (resultCode == RESULT_OK) {
+                // A contact was picked.  Here we will just display it
+                // to the user.
+                //String event_name = data.getExtras().getString("events");
+                Parcelable[] events = data.getExtras().getParcelableArray("events");
+                Log.d(TAG, "Google Events Received:  " + events);
+                for(Parcelable uncastEvent : events){
+                    eventParcelable event = (eventParcelable) uncastEvent;
+                    Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
+                }
             }
         }
     }
