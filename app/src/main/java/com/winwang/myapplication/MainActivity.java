@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
-
 public class MainActivity extends ActionBarActivity {
 
     String TAG = "MainActivity";
@@ -91,10 +90,12 @@ public class MainActivity extends ActionBarActivity {
         ListView list = (ListView) findViewById(R.id.EventsList);
         list.setClickable(true);
 
+        /*
         eventsList.add(new Event());
         eventsList.add(new Event("Test1", "1234455"));
         eventsList.add(new Event("Test2", "00000"));
         eventsList.add(new Event("Test3", "1234567890"));
+        */
 
         EventsAdapter adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
 
@@ -199,8 +200,8 @@ public class MainActivity extends ActionBarActivity {
                 // to the user.
                 String event_name = data.getExtras().getString("event_name");
                 Log.d(TAG, "Success!! :  " + event_name);
-                Event new_event = new Event(event_name, "Returned from creation");
-                eventsList.add(0,new_event);
+                //Event new_event = new Event(event_name, "Returned from creation");
+                //eventsList.add(0,new_event);
             }
         }
         if (requestCode == GOOGLE_CALENDAR_EVENTS) {
@@ -211,11 +212,13 @@ public class MainActivity extends ActionBarActivity {
                 Parcelable[] events = data.getExtras().getParcelableArray("events");
                 Log.d(TAG, "Google Events Received:  " + events);
                 for(Parcelable uncastEvent : events){
-                    eventParcelable event = (eventParcelable) uncastEvent;
-                    Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
+                    eventParcelable eventParcelable = (eventParcelable) uncastEvent;
+                    Log.d(TAG, "GOOGLE EVENT DATA: " + eventParcelable.toString());
+                    eventsList.add(new Event(eventParcelable));
                 }
             }
         }
     }
+
 
 }

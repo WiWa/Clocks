@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -32,15 +34,24 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         if (event != null) {
             TextView name = (TextView) v.findViewById(R.id.tvEventName);
             TextView description = (TextView) v.findViewById(R.id.tvEventDescription);
-            TextView details = (TextView) v.findViewById(R.id.tvEventDetails);
+            TextView startDate = (TextView) v.findViewById(R.id.tvEventStart);
+            TextView endDate = (TextView) v.findViewById(R.id.tvEventEnd);
             if (name != null) {
                 name.setText(event.getName());
             }
             if (description != null) {
                 description.setText(event.getDescription());
             }
-            if (details != null) {
-                details.setText(event.toString());
+            if (startDate != null) {
+                startDate.setText(event.getStartDate().toString());
+            }
+            if (endDate != null) {
+                if(event.getEndDate().getTime() == 0){
+                    endDate.setText("N/A");
+                }
+                else {
+                    endDate.setText(event.getEndDate().toString());
+                }
             }
         }
 

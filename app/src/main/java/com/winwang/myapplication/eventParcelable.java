@@ -3,9 +3,8 @@ package com.winwang.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.api.services.calendar.model.*;
-
-import java.util.List;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by wiwa on 8/16/15.
@@ -14,27 +13,27 @@ public class eventParcelable implements Parcelable{
 
     private String mSummary;
     private String mDescription;
-    private String mStartTimeString;
-    private String mEndTimeString;
+    private long mStartTime;
+    private long mEndTime;
 
     //// the data structure.
     public eventParcelable(com.google.api.services.calendar.model.Event event) {
         mSummary = event.getSummary();
         mDescription = event.getDescription();
-        mStartTimeString = event.getStart().toString();
+        mStartTime = event.getStart().getDateTime().getValue();
         if(event.isEndTimeUnspecified()){
-            mEndTimeString = "";
+            mEndTime = 0;
         }
         else{
-            mEndTimeString = event.getEnd().toString();
+            mEndTime = event.getEnd().getDateTime().getValue();
         }
     }
 
     private eventParcelable(Parcel in){
         mSummary = in.readString();
         mDescription = in.readString();
-        mStartTimeString = in.readString();
-        mEndTimeString = in.readString();
+        mStartTime = in.readLong();
+        mEndTime = in.readLong();
     }
 
     @Override
@@ -55,17 +54,17 @@ public class eventParcelable implements Parcelable{
     public void writeToParcel(Parcel p, int flag) {
         p.writeString(mSummary);
         p.writeString(mDescription);
-        p.writeString(mStartTimeString);
-        p.writeString(mEndTimeString);
+        p.writeLong(mStartTime);
+        p.writeLong(mEndTime);
     }
 
     public String toString() {
         String myString = "eventParcelable{ ";
         myString += "Summary: " + mSummary;
         myString += "Description: " + mDescription;
-        myString += "Start: " + mStartTimeString;
-        if(mEndTimeString.length() > 0){
-            myString += "End: " + mEndTimeString;
+        myString += "Start: " + (new Date(mStartTime)).toString() + ", " + String.valueOf(mStartTime);
+        if(mEndTime > 0){
+            myString += "End: " + (new Date(mEndTime)).toString() + ", " + String.valueOf(mEndTime);
         }
         else{
             myString += "End: " + "N/A";
@@ -73,4 +72,21 @@ public class eventParcelable implements Parcelable{
         myString += " }";
         return myString;
     }
+
+    public String getmSummary() {
+        return mSummary;
+    }
+
+    public String getmDescription() {
+        return mDescription;
+    }
+
+    public long getmStartTime() {
+        return mStartTime;
+    }
+
+    public long getmEndTime() {
+        return mEndTime;
+    }
+
 }
