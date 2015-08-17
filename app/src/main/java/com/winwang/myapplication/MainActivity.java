@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
     String TAG = "MainActivity";
     final List<Event> eventsList= new Vector<Event>();
     ListView mListView;
-    EventsAdapter adapter;
+    EventsAdapter mEventsAdapter;
 
     static final int CREATE_NEW_EVENT = 0;
     static final int GOOGLE_CALENDAR_EVENTS = 1;
@@ -99,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
         eventsList.add(new Event("Test3", "1234567890"));
         */
 
-        adapter = new EventsAdapter(this, R.id.EventsList, eventsList);
+        mEventsAdapter = new EventsAdapter(this, R.id.EventsList, eventsList);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -110,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(mEventsAdapter);
     }
 
     public int pxToDp(int pix){
@@ -212,25 +212,15 @@ public class MainActivity extends ActionBarActivity {
                 // to the user.
                 //String event_name = data.getExtras().getString("events");
                 Parcelable[] uncastevents = data.getExtras().getParcelableArray("events");
-                final List<Event> events = new Vector<Event>();
                 Log.d(TAG, "Google Events Received:  " + uncastevents);
 
                 for(Parcelable uncastEvent : uncastevents){
                     Event event = new Event((eventParcelable) uncastEvent);
                     Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
                     //eventsList.add(0, event);
-                    events.add(event);
+                    eventsList.add(0, event);
                 }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Event event : events){
-                            eventsList.add(0, event);
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                mEventsAdapter.notifyDataSetChanged();
 
             }
         }
