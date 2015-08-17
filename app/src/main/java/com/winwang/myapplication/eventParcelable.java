@@ -65,7 +65,7 @@ public class eventParcelable implements Parcelable{
         myString += "Description: " + mDescription;
         myString += "Start: " + mStartTimeString;
         if(mEndTimeString.length() > 0){
-            myString += "End: " + mSummary;
+            myString += "End: " + mEndTimeString;
         }
         else{
             myString += "End: " + "N/A";
