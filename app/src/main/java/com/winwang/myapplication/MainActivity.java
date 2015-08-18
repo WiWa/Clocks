@@ -302,6 +302,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "ColorsArrayList: " + colors);
 
                 mEventsAdapter.notifyDataSetChanged();
+                mDonuts.invalidate();
 
             }
         }
