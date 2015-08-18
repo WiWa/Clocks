@@ -11,12 +11,11 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An asynchronous task that handles the Google Calendar API call.
@@ -98,11 +97,23 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
      */
     private List<String> getDataFromApi() throws IOException {
         // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
+        //DateTime now = new DateTime(System.currentTimeMillis());
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        c.set(java.util.Calendar.MINUTE, 0);
+        c.set(java.util.Calendar.SECOND, 0);
+        c.set(java.util.Calendar.MILLISECOND, 0);
+        DateTime lastMidnight = new DateTime(c.getTime());
+        c.add(java.util.Calendar.DATE, 1);
+        DateTime nextMidnight = new DateTime(c.getTime());
+
+
         List<String> eventStrings = new ArrayList<String>();
         Events events = mActivity.mService.events().list("primary")
                 .setMaxResults(10)
-                .setTimeMin(now)
+                .setTimeMin(lastMidnight)
+                .setTimeMax(nextMidnight)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
