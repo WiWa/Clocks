@@ -3,7 +3,12 @@ package com.winwang.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.ColorDefinition;
+import com.google.api.services.calendar.model.Colors;
+
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -15,6 +20,8 @@ public class eventParcelable implements Parcelable{
     private String mDescription;
     private long mStartTime;
     private long mEndTime;
+
+    private String mColorID;
 
     //// the data structure.
     public eventParcelable(com.google.api.services.calendar.model.Event event) {
@@ -43,6 +50,7 @@ public class eventParcelable implements Parcelable{
         else{
             mEndTime = 0;
         }
+        mColorID = event.getColorId();
 //        if(event.isEndTimeUnspecified()){
 //            mEndTime = 0;
 //        }
@@ -51,11 +59,12 @@ public class eventParcelable implements Parcelable{
 //        }
     }
 
-    private eventParcelable(Parcel in){
+    private eventParcelable(Parcel in) {
         mSummary = in.readString();
         mDescription = in.readString();
         mStartTime = in.readLong();
         mEndTime = in.readLong();
+        mColorID = in.readString();
     }
 
     @Override
@@ -78,6 +87,7 @@ public class eventParcelable implements Parcelable{
         p.writeString(mDescription);
         p.writeLong(mStartTime);
         p.writeLong(mEndTime);
+        p.writeString(mColorID);
     }
 
     public String toString() {
@@ -91,6 +101,7 @@ public class eventParcelable implements Parcelable{
         else{
             myString += "End: " + "N/A";
         }
+        myString += "ColorID: " + mColorID;
         myString += " }";
         return myString;
     }
@@ -109,6 +120,10 @@ public class eventParcelable implements Parcelable{
 
     public long getmEndTime() {
         return mEndTime;
+    }
+
+    public String getmColorID() {
+        return mColorID;
     }
 
 }

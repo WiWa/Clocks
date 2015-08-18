@@ -13,6 +13,8 @@ public class Event{
     private Date startDate;
     private Date endDate;
 
+    private String color;
+
     Event(){
         name = "Unnamed Event";
         description = "No Description";
@@ -31,6 +33,7 @@ public class Event{
         description = event.getmDescription();
         startDate = new Date(event.getmStartTime());
         endDate = new Date(event.getmEndTime());
+        color = "#a4bdfc";
     }
 
     public String toString(){
@@ -39,7 +42,8 @@ public class Event{
         eventString += "name: " + name + ", ";
         eventString += "description: " + description + ", ";
         eventString += "start: " + startDate.toString() + ", ";
-        eventString += "end: " + endDate.toString() + " }";
+        eventString += "end: " + endDate.toString() + ", ";
+        eventString += "color: " + color + " }";
 
         return eventString;
     }
@@ -60,8 +64,16 @@ public class Event{
         this.endDate = endDate;
     }
 
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public String getName() { return name; }
     public String getDescription() { return description; }
     public Date getStartDate() { return startDate; }
     public Date getEndDate() { return endDate; }
+
+    public String getColor() {
+        return color;
+    }
 }

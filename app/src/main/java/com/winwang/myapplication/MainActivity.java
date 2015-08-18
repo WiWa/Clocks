@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -234,6 +235,23 @@ public class MainActivity extends ActionBarActivity {
                     //eventsList.add(0, event);
                     eventsList.add(0, event);
                 }
+
+                ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
+                String colorIDstring = "";
+                for (String colorID : colorIDs){
+                    colorIDstring += colorID + ", ";
+                }
+                Log.d(TAG, "COLORIDS:" + colorIDstring);
+                ArrayList<String> colors = data.getExtras().getStringArrayList("colors");
+
+                String colorstring = "";
+                for (String color : colors){
+                    colorstring += color + ", ";
+                }
+                Log.d(TAG, "COLORS:" + colorstring);
+
+                Log.d(TAG, "ColorsArrayList: " + colors);
+
                 mEventsAdapter.notifyDataSetChanged();
 
             }

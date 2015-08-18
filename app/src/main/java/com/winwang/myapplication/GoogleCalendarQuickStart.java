@@ -10,8 +10,9 @@ package com.winwang.myapplication;
         import com.google.api.client.util.ExponentialBackOff;
 
 
-        import com.google.api.services.calendar.CalendarScopes;
+        import com.google.api.services.calendar.*;
         import com.google.api.services.calendar.model.*;
+        import com.google.api.services.calendar.model.Calendar;
         import com.google.api.services.calendar.model.Event;
 
         import android.accounts.AccountManager;
@@ -35,8 +36,12 @@ package com.winwang.myapplication;
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import java.io.IOException;
+        import java.lang.reflect.Array;
+        import java.util.ArrayList;
         import java.util.Arrays;
         import java.util.List;
+        import java.util.Map;
 
 public class GoogleCalendarQuickStart extends Activity {
     /**
@@ -62,6 +67,8 @@ public class GoogleCalendarQuickStart extends Activity {
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+
+    private com.google.api.services.calendar.model.Colors colors;
 
     /**
      * Create the main activity.
@@ -201,7 +208,7 @@ public class GoogleCalendarQuickStart extends Activity {
             chooseAccount();
         } else {
             if (isDeviceOnline()) {
-                new ApiAsyncTask(this).execute();
+                new ApiAsyncTask(this).execute(transport, jsonFactory, credential);
             } else {
                 mStatusText.setText("No network connection available.");
             }
@@ -336,12 +343,34 @@ public class GoogleCalendarQuickStart extends Activity {
             i++;
         }
 
+
         b.putParcelableArray("events", events);
+        b.putStringArrayList("colorIDs", getColorIDs());
+        b.putStringArrayList("colors", getColorStrings());
 
         resultIntent.putExtras(b);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
 
+    public void setColors(com.google.api.services.calendar.model.Colors colors) {
+        this.colors = colors;
+    }
+
+    private ArrayList<String> getColorIDs(){
+        ArrayList<String> colorIDs = new ArrayList<String>();
+        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+            colorIDs.add(color.getKey());
+        }
+        return colorIDs;
+    }
+
+    private ArrayList<String> getColorStrings(){
+        ArrayList<String> colorStrs = new ArrayList<String>();
+        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+            colorStrs.add(color.getValue().getBackground());
+        }
+        return colorStrs;
+    }
 
 }
