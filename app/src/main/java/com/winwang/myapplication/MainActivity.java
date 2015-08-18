@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
 
     static final int CREATE_NEW_EVENT = 0;
     static final int GOOGLE_CALENDAR_EVENTS = 1;
+    static final long MS_IN_A_DAY = 86400000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,6 +251,7 @@ public class MainActivity extends ActionBarActivity {
                     Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
                     //eventsList.add(0, event);
                     eventsList.add(0, event);
+                    mDonuts.addArc(arcFromEvent(event));
                 }
 
                 String colorIDstring = "";
@@ -269,6 +272,17 @@ public class MainActivity extends ActionBarActivity {
 
             }
         }
+    }
+
+    private DonutsArc arcFromEvent(Event event){
+        double msStart = event.msSinceMidnight(event.getStartDate());
+        double msEnd = event.msSinceMidnight(event.getEndDate());
+
+        double startDegree = (msStart / MS_IN_A_DAY) * 360;
+        double endDegree = (msEnd / MS_IN_A_DAY) * 360;
+
+        return new DonutsArc(mDonuts, startDegree, endDegree,
+                Color.GRAY, Color.parseColor(event.getColor()));
     }
 
 

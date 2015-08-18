@@ -9,24 +9,28 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /**
  * Created by wiwa on 8/17/15.
  */
 public class DonutsVisualization extends View{
 
-    final String TAG = "Donuts Visualization";
-    final float INNER_RADIUS = 120;
-    final float OUTER_RADIUS = 250;
+    static final String TAG = "Donuts Visualization";
+    private float innerRadius = 120;
+    private float outerRadius = 250;
 
-    int width;
-    int height;
-    int centerx;
-    int centery;
-    int radius;
+    private int width;
+    private int height;
+    private int centerx;
+    private int centery;
+    private int radius;
 
     Paint paintText;
     Paint paintArcBorder;
     Paint paintArcFill;
+
+    ArrayList<DonutsArc> mDonuts;
 
 
     public DonutsVisualization(Context context){
@@ -62,6 +66,10 @@ public class DonutsVisualization extends View{
         paintArcBorder.setColor(Color.GREEN);
         Log.i(TAG, "Donuts init()");
 
+        mDonuts = new ArrayList<DonutsArc>();
+//        addArc(new DonutsArc(centerx, centery, innerRadius, outerRadius, 10, 90, Color.RED,Color.BLUE));
+
+        addArc(new DonutsArc(this, 10, 90, Color.RED,Color.BLUE));
     }
 
     @Override
@@ -87,7 +95,6 @@ public class DonutsVisualization extends View{
         width = getMeasuredWidth();
         height = getMeasuredHeight();
 
-
         setMeasuredDimension(width, height);
 
     }
@@ -95,17 +102,17 @@ public class DonutsVisualization extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
+
         centerx = width / 2;
         centery = height / 2;
-
         radius = Math.min(width, height);
 
         //testing
         //canvas.drawCircle(centerx, centery, 100, paintArcBorder);
-        DonutsArc myArc = new DonutsArc(centerx, centery, INNER_RADIUS, OUTER_RADIUS, 10, 90, Color
-                .RED,
-                Color.BLUE);
-        myArc.draw(canvas);
+        for(DonutsArc arc : mDonuts){
+            arc.updatePosition(centerx, centery);
+            arc.draw(canvas);
+        }
         /*
         RectF myRect = new RectF(150, 150, 500, 500);
         canvas.drawArc(100, 100, 400, 400, 30, 140, true,
@@ -114,5 +121,25 @@ public class DonutsVisualization extends View{
                 paintArcBorder);
         */
         //canvas.drawArc();
+    }
+
+    public void addArc(DonutsArc arc){
+        mDonuts.add(arc);
+    }
+
+    public int getCenterX() {
+        return centerx;
+    }
+
+    public int getCenterY() {
+        return centery;
+    }
+
+    public float getInnerRadius() {
+        return innerRadius;
+    }
+
+    public float getOuterRadius() {
+        return outerRadius;
     }
 }

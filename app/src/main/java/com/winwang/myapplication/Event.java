@@ -52,6 +52,19 @@ public class Event{
         return eventString;
     }
 
+    public long msSinceMidnight(Date nowDate){
+        Calendar c = Calendar.getInstance();
+        c.setTime(nowDate);
+        long now = c.getTimeInMillis();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        long passed = now - c.getTimeInMillis();
+
+        return passed;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

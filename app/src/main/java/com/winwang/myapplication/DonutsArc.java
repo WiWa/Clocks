@@ -29,6 +29,16 @@ public class DonutsArc {
 
     }
 
+    public DonutsArc(DonutsVisualization donutsVisualization, double
+            startDegree, double endDegree,
+                     int fillColor, int borderColor){
+
+        this(donutsVisualization.getCenterX(), donutsVisualization.getCenterY(),
+                donutsVisualization.getInnerRadius(), donutsVisualization.getOuterRadius(),
+                startDegree, endDegree, fillColor,borderColor);
+
+    }
+
     public DonutsArc(double centerx, double centery, double innerRadius, double outerRadius, double
             startDegree, double endDegree,
                      int fillColor, int borderColor){
@@ -37,8 +47,8 @@ public class DonutsArc {
         this.centery = centery;
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
-        this.startDegree = startDegree;
-        this.endDegree = endDegree;
+        this.startDegree = startDegree - 90; // Start from top.
+        this.endDegree = endDegree - 90;
         this.fillColor = fillColor;
         this.borderColor = borderColor;
 
@@ -47,8 +57,8 @@ public class DonutsArc {
         paintArcBorder.setStrokeWidth(10);
         paintArcBorder.setColor(borderColor);
 
-        this.innerRect = calculateRect(innerRadius);
-        this.outerRect = calculateRect(outerRadius);
+        this.innerRect = calculateRect(new RectF(), innerRadius);
+        this.outerRect = calculateRect(new RectF(), outerRadius);
 
     }
     
@@ -64,15 +74,13 @@ public class DonutsArc {
                 getEndX(outerRadius), getEndY(outerRadius), paintArcBorder);
     }
 
-    public RectF calculateRect(double radius){
-        RectF rect = new RectF();
-
+    public RectF calculateRect(RectF rect, double radius){
         double left = centerx - radius;
         double right = centerx + radius;
         double top = centery - radius;
         double bottom = centery + radius;
 
-        rect.set((float) left,(float) top,(float) right,(float) bottom);
+        rect.set((float) left, (float) top, (float) right, (float) bottom);
 
         return rect;
     }
@@ -100,6 +108,22 @@ public class DonutsArc {
     }
 
 
+    public void setCenterX(double centerx) {
+        this.centerx = centerx;
+    }
+
+    public void setCenterY(double centery) {
+        this.centery = centery;
+    }
+
+    public void updatePosition(double centerx, double centery){
+        if(this.centerx != centerx || this.centery != centery){
+            setCenterX(centerx);
+            setCenterY(centery);
+            this.innerRect = calculateRect(this.innerRect, innerRadius);
+            this.outerRect = calculateRect(this.outerRect, outerRadius);
+        }
+    }
 
     public double getInnerRadius() {
         return innerRadius;
