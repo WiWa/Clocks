@@ -33,19 +33,25 @@ import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.api.client.util.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
 public class MainActivity extends ActionBarActivity {
 
-    String TAG = "MainActivity";
+    final String TAG = "MainActivity";
     final List<Event> eventsList= new Vector<Event>();
-    ListView mListView;
-    EventsAdapter mEventsAdapter;
-    DonutsVisualization mDonuts;
+    private ListView mListView;
+    private EventsAdapter mEventsAdapter;
+    private DonutsVisualization mDonuts;
+    DateTime lastMidnight;
+    DateTime noon;
+    DateTime nextMidnight;
 
     static final int CREATE_NEW_EVENT = 0;
     static final int GOOGLE_CALENDAR_EVENTS = 1;
@@ -102,6 +108,17 @@ public class MainActivity extends ActionBarActivity {
         mDonuts = new DonutsVisualization(MainActivity.this, )
 */
         mDonuts = (DonutsVisualization) findViewById(R.id.dvClocks);
+
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        c.set(java.util.Calendar.MINUTE, 0);
+        c.set(java.util.Calendar.SECOND, 0);
+        c.set(java.util.Calendar.MILLISECOND, 0);
+        lastMidnight = new DateTime(c.getTime());
+        c.add(java.util.Calendar.DATE, 1);
+        nextMidnight = new DateTime(c.getTime());
+
     }
 
     public void initEventsList(){
@@ -239,6 +256,9 @@ public class MainActivity extends ActionBarActivity {
                     int colorIndex = colorIDs.indexOf(castEvent.getmColorID());
                     Event event = new Event(castEvent);
 
+                    if(notToday(event)){
+                        continue;
+                    }
                     String eventColor = "None";
                     if(colorIndex >= 0){
                         eventColor = colors.get(colorIndex);
@@ -250,7 +270,7 @@ public class MainActivity extends ActionBarActivity {
 
                     Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
                     //eventsList.add(0, event);
-                    eventsList.add(0, event);
+                    eventsList.add(event);
                     mDonuts.addArc(arcFromEvent(event));
                 }
 
@@ -283,6 +303,16 @@ public class MainActivity extends ActionBarActivity {
 
         return new DonutsArc(mDonuts, startDegree, endDegree,
                 Color.GRAY, Color.parseColor(event.getColor()));
+    }
+
+    private boolean notToday(Event event){
+        if(event.getStartDate().getTime() > nextMidnight.getValue()){
+            return true;
+        }
+        if(event.getEndDate().getTime() < lastMidnight.getValue()){
+            return true;
+        }
+        return false;
     }
 
 

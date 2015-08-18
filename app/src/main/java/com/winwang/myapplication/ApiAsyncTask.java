@@ -113,7 +113,7 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
         Events events = mActivity.mService.events().list("primary")
                 .setMaxResults(10)
                 .setTimeMin(lastMidnight)
-                .setTimeMax(nextMidnight)
+                //.setTimeMax(nextMidnight)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
