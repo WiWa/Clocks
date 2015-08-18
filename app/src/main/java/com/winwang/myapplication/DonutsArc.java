@@ -1,5 +1,8 @@
 package com.winwang.myapplication;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -20,6 +23,8 @@ public class DonutsArc {
     private RectF innerRect;
     private RectF outerRect;
 
+    private Paint paintArcBorder;
+
     public DonutsArc(){
 
     }
@@ -37,9 +42,26 @@ public class DonutsArc {
         this.fillColor = fillColor;
         this.borderColor = borderColor;
 
+        this.paintArcBorder = new Paint();
+        paintArcBorder.setStyle(Paint.Style.STROKE);
+        paintArcBorder.setStrokeWidth(10);
+        paintArcBorder.setColor(borderColor);
+
         this.innerRect = calculateRect(innerRadius);
         this.outerRect = calculateRect(outerRadius);
 
+    }
+    
+    public void draw(Canvas canvas){
+
+        canvas.drawArc(getInnerRect(), getStartAngle(), getSweepAngle(), false,
+                paintArcBorder);
+        canvas.drawArc(getOuterRect(), getStartAngle(), getSweepAngle(), false,
+                paintArcBorder);
+        canvas.drawLine(getStartX(innerRadius), getStartY(innerRadius),
+                getStartX(outerRadius), getStartY(outerRadius), paintArcBorder);
+        canvas.drawLine(getEndX(innerRadius), getEndY(innerRadius),
+                getEndX(outerRadius), getEndY(outerRadius), paintArcBorder);
     }
 
     public RectF calculateRect(double radius){
@@ -62,6 +84,21 @@ public class DonutsArc {
     public float getSweepAngle(){
         return (float) (this.endDegree - this.startDegree);
     }
+
+    public float getStartX(double radius){
+        return (float) (this.centerx + radius * Math.cos(Math.toRadians(startDegree)));
+    }
+    public float getStartY(double radius){
+        return (float) (this.centery + radius * Math.sin(Math.toRadians(startDegree)) );
+    }
+
+    public float getEndX(double radius){
+        return (float) (this.centerx + radius * Math.cos(Math.toRadians(endDegree)) );
+    }
+    public float getEndY(double radius){
+        return (float) (this.centery + radius * Math.sin(Math.toRadians(endDegree)) );
+    }
+
 
 
     public double getInnerRadius() {

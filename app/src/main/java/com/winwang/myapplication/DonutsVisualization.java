@@ -16,7 +16,7 @@ public class DonutsVisualization extends View{
 
     final String TAG = "Donuts Visualization";
     final float INNER_RADIUS = 120;
-    final float OUTER_RADIUS = 260;
+    final float OUTER_RADIUS = 250;
 
     int width;
     int height;
@@ -102,13 +102,10 @@ public class DonutsVisualization extends View{
 
         //testing
         //canvas.drawCircle(centerx, centery, 100, paintArcBorder);
-        DonutsArc myArc = new DonutsArc(centerx, centery, INNER_RADIUS, OUTER_RADIUS, 30, 180, Color
+        DonutsArc myArc = new DonutsArc(centerx, centery, INNER_RADIUS, OUTER_RADIUS, 10, 90, Color
                 .RED,
                 Color.BLUE);
-        canvas.drawArc(myArc.getInnerRect(), myArc.getStartAngle(), myArc.getSweepAngle(), false,
-                paintArcBorder);
-        canvas.drawArc(myArc.getOuterRect(), myArc.getStartAngle(), myArc.getSweepAngle(), false,
-                paintArcBorder);
+        myArc.draw(canvas);
         /*
         RectF myRect = new RectF(150, 150, 500, 500);
         canvas.drawArc(100, 100, 400, 400, 30, 140, true,
