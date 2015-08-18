@@ -64,9 +64,15 @@ public class MainActivity extends ActionBarActivity {
 
         initEventsList();
         initClocks();
-        initCreateButton();
 
         Log.d(TAG, "Main Activity Created :3");
+
+        getGoogleCalendarData();
+    }
+
+    private void getGoogleCalendarData(){
+        Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
+        startActivityForResult(googleCalendarIntent, GOOGLE_CALENDAR_EVENTS);
     }
 
     private void showToast(String message) {
@@ -92,10 +98,12 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        /*
         if (id == R.id.action_myitem) {
             Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
             startActivityForResult(googleCalendarIntent, GOOGLE_CALENDAR_EVENTS);
         }
+        */
 
         return super.onOptionsItemSelected(item);
     }
@@ -154,6 +162,7 @@ public class MainActivity extends ActionBarActivity {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pix, getResources().getDisplayMetrics());
     }
 
+    /*
     public void initCreateButton(){
         final Button btnCreateEvent, btnCreateConfirm, btnCreateCancel;
         final LinearLayout popupLayout;
@@ -183,9 +192,9 @@ public class MainActivity extends ActionBarActivity {
 //                final DatePicker eventDate = (DatePicker) dialogView.findViewById(R.id.CreateEventDatePicker);
 //                final TimePicker eventTime = (TimePicker) dialogView.findViewById(R.id.CreateEventTimePicker);
                 eventName.setText("Sample Name");
-                */
 
-                /*
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("New Event")
                 .setMessage("Name and Date are required fields.")
@@ -212,8 +221,8 @@ public class MainActivity extends ActionBarActivity {
                 dialog.show();
 
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                */
-                /*
+
+
                 FragmentManager fm = getFragmentManager();
                 CreateEventDialogFragment frag = new CreateEventDialogFragment();
                 //frag.show(ft, "txn_tag");
@@ -224,13 +233,14 @@ public class MainActivity extends ActionBarActivity {
                 // for the fragment, which is always the root view for the activity
                 ft.add(android.R.id.content, frag)
                         .addToBackStack(null).commit();
-                */
+
 
 
             }
         });
 
     }
+*/
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (requestCode == CREATE_NEW_EVENT) {
@@ -307,7 +317,11 @@ public class MainActivity extends ActionBarActivity {
         return new DonutsArc(mDonuts, startDegree, endDegree,
                 Color.GRAY, Color.parseColor(event.getColor()));
     }
+        /*
+    private boolean isToday(Event event){
 
+    }
+    */
     // one clock for now.
     private boolean onThisClock(Event event){
         Date now = new Date();

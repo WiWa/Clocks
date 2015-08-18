@@ -101,7 +101,7 @@ public class GoogleCalendarQuickStart extends Activity {
         mResultsText.setVerticalScrollBarEnabled(true);
         mResultsText.setMovementMethod(new ScrollingMovementMethod());
         activityLayout.addView(mResultsText);
-
+/*
         mReturnResults = new Button(this);
         mReturnResults.setLayoutParams(tlp);
         mReturnResults.setPadding(16, 16, 16, 16);
@@ -120,7 +120,7 @@ public class GoogleCalendarQuickStart extends Activity {
                 }
             }
         });
-
+*/
         setContentView(activityLayout);
 
         // Initialize credentials and service object.
@@ -331,7 +331,7 @@ public class GoogleCalendarQuickStart extends Activity {
         mDataReceived = true;
     }
 
-    private void returnResults(){
+    public void returnResults(){
         Intent resultIntent = new Intent();
         Bundle b = new Bundle();
 

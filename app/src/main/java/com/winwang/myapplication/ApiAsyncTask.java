@@ -134,4 +134,8 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
         return eventStrings;
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        mActivity.returnResults();
+    }
 }
