@@ -116,6 +116,9 @@ public class MainActivity extends ActionBarActivity {
         c.set(java.util.Calendar.SECOND, 0);
         c.set(java.util.Calendar.MILLISECOND, 0);
         lastMidnight = new DateTime(c.getTime());
+        c.set(java.util.Calendar.HOUR_OF_DAY, 12);
+        noon = new DateTime(c.getTime());
+        c.set(java.util.Calendar.HOUR_OF_DAY, 0);
         c.add(java.util.Calendar.DATE, 1);
         nextMidnight = new DateTime(c.getTime());
 
@@ -256,7 +259,7 @@ public class MainActivity extends ActionBarActivity {
                     int colorIndex = colorIDs.indexOf(castEvent.getmColorID());
                     Event event = new Event(castEvent);
 
-                    if(notToday(event)){
+                    if(onThisClock(event)){
                         continue;
                     }
                     String eventColor = "None";
@@ -298,19 +301,31 @@ public class MainActivity extends ActionBarActivity {
         double msStart = event.msSinceMidnight(event.getStartDate());
         double msEnd = event.msSinceMidnight(event.getEndDate());
 
-        double startDegree = (msStart / MS_IN_A_DAY) * 360;
-        double endDegree = (msEnd / MS_IN_A_DAY) * 360;
+        double startDegree = (msStart / MS_IN_A_DAY) * 360 * 2; // 12 hours clock
+        double endDegree = (msEnd / MS_IN_A_DAY) * 360 * 2;
 
         return new DonutsArc(mDonuts, startDegree, endDegree,
                 Color.GRAY, Color.parseColor(event.getColor()));
     }
 
-    private boolean notToday(Event event){
-        if(event.getStartDate().getTime() > nextMidnight.getValue()){
-            return true;
+    // one clock for now.
+    private boolean onThisClock(Event event){
+        Date now = new Date();
+        if(now.getTime() < noon.getValue()){
+            if(event.getStartDate().getTime() > noon.getValue()){
+                return true;
+            }
+            if(event.getEndDate().getTime() < lastMidnight.getValue()){
+                return true;
+            }
         }
-        if(event.getEndDate().getTime() < lastMidnight.getValue()){
-            return true;
+        else {
+            if(event.getStartDate().getTime() > nextMidnight.getValue()){
+                return true;
+            }
+            if(event.getEndDate().getTime() < noon.getValue()){
+                return true;
+            }
         }
         return false;
     }
