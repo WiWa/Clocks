@@ -29,11 +29,15 @@ public class Event{
     }
 
     Event(eventParcelable event){
+        this(event, "#a4bdfc");
+    }
+
+    Event(eventParcelable event, String color){
         name = event.getmSummary();
         description = event.getmDescription();
         startDate = new Date(event.getmStartTime());
         endDate = new Date(event.getmEndTime());
-        color = "#a4bdfc";
+        this.color = color;
     }
 
     public String toString(){

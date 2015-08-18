@@ -226,23 +226,36 @@ public class MainActivity extends ActionBarActivity {
                 // A contact was picked.  Here we will just display it
                 // to the user.
                 //String event_name = data.getExtras().getString("events");
+                ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
+                ArrayList<String> colors = data.getExtras().getStringArrayList("colors");
                 Parcelable[] uncastevents = data.getExtras().getParcelableArray("events");
+
                 Log.d(TAG, "Google Events Received:  " + uncastevents);
 
                 for(Parcelable uncastEvent : uncastevents){
-                    Event event = new Event((eventParcelable) uncastEvent);
+                    eventParcelable castEvent = (eventParcelable) uncastEvent;
+                    int colorIndex = colorIDs.indexOf(castEvent.getmColorID());
+                    Event event = new Event(castEvent);
+
+                    String eventColor = "None";
+                    if(colorIndex >= 0){
+                        eventColor = colors.get(colorIndex);
+                        event.setColor(eventColor);
+                    }
+                    Log.d(TAG, "get mColorID: " + castEvent.getmColorID());
+                    Log.d(TAG, "colorIndex: " + colorIndex);
+                    Log.d(TAG, "eventColor: " + eventColor);
+
                     Log.d(TAG, "GOOGLE EVENT DATA: " + event.toString());
                     //eventsList.add(0, event);
                     eventsList.add(0, event);
                 }
 
-                ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
                 String colorIDstring = "";
                 for (String colorID : colorIDs){
                     colorIDstring += colorID + ", ";
                 }
                 Log.d(TAG, "COLORIDS:" + colorIDstring);
-                ArrayList<String> colors = data.getExtras().getStringArrayList("colors");
 
                 String colorstring = "";
                 for (String color : colors){

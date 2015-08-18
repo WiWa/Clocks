@@ -51,6 +51,9 @@ public class eventParcelable implements Parcelable{
             mEndTime = 0;
         }
         mColorID = event.getColorId();
+        if(mColorID == null){
+            mColorID = "1";
+        }
 //        if(event.isEndTimeUnspecified()){
 //            mEndTime = 0;
 //        }
