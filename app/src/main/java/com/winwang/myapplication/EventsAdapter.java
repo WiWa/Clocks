@@ -1,6 +1,7 @@
 package com.winwang.myapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,10 @@ public class EventsAdapter extends ArrayAdapter<Event> {
                     endDate.setText(event.getEndDate().toString());
                 }
             }
+        }
+
+        if(event.getColor() != null && event.getColor() != "None"){
+            v.setBackgroundColor(Color.parseColor(event.getColor()));
         }
 
         return v;

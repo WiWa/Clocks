@@ -10,10 +10,11 @@
             android:layout_height="wrap_content" android:textStyle="bold"
             android:text="Event Description" android:textSize="13sp"></TextView>
     <TextView android:id="@+id/tvEventStart" android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:text="Event Start Time" android:textSize="13sp"></TextView>
     <TextView android:id="@+id/tvEventEnd" android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp"
         android:text="Event End Time" android:textSize="13sp"></TextView>
 
 </LinearLayout>
