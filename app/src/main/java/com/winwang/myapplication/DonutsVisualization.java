@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ import java.util.ArrayList;
 public class DonutsVisualization extends View{
 
     static final String TAG = "Donuts Visualization";
-    private float innerRadius = 120;
-    private float outerRadius = 250;
+    private float innerRadius = 60;
+    private float outerRadius = 100;
 
     private int width;
     private int height;
@@ -48,7 +49,16 @@ public class DonutsVisualization extends View{
         init();
     }
 
+
+    public float pxToDp(float pix){
+        return (float) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pix, getResources()
+                .getDisplayMetrics());
+    }
+
     private void init(){
+
+        innerRadius = pxToDp(innerRadius);
+        outerRadius = pxToDp(outerRadius);
 
         paintText = new Paint();
         paintText.setTextSize(15);
