@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.widget.Toast;
 
 /**
  * Created by wiwa on 8/18/15.
@@ -154,6 +155,19 @@ public class DonutsArc {
             setCenterX(centerx);
             setCenterY(centery);
             this.innerRect = calculateRect(this.innerRect, innerRadius);
+            this.outerRect = calculateRect(this.outerRect, outerRadius);
+        }
+    }
+    public void updateRadii(double innerRadius, double outerRadius) throws Exception{
+        if(outerRadius > innerRadius){
+            throw new Exception("Outer Radius can't be smaller than Inner Radius. Duh.");
+        }
+        if(this.innerRadius != innerRadius){
+            setInnerRadius(innerRadius);
+            this.innerRect = calculateRect(this.innerRect, innerRadius);
+        }
+        if(this.outerRadius != outerRadius){
+            setOuterRadius(outerRadius);
             this.outerRect = calculateRect(this.outerRect, outerRadius);
         }
     }
