@@ -3,6 +3,8 @@ package com.winwang.myapplication;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -18,12 +20,12 @@ public class DonutsArc {
     private double startDegree;
     private double endDegree;
     private int fillColor;
-    private int borderColor;
+    private int arcColor;
 
     private RectF innerRect;
     private RectF outerRect;
 
-    private Paint paintArcBorder;
+    private Paint paintArc;
 
     public DonutsArc(){
 
@@ -31,17 +33,17 @@ public class DonutsArc {
 
     public DonutsArc(DonutsVisualization donutsVisualization, double
             startDegree, double endDegree,
-                     int fillColor, int borderColor){
+                     int fillColor, int arcColor){
 
         this(donutsVisualization.getCenterX(), donutsVisualization.getCenterY(),
                 donutsVisualization.getInnerRadius(), donutsVisualization.getOuterRadius(),
-                startDegree, endDegree, fillColor,borderColor);
+                startDegree, endDegree, fillColor,arcColor);
 
     }
 
     public DonutsArc(double centerx, double centery, double innerRadius, double outerRadius, double
             startDegree, double endDegree,
-                     int fillColor, int borderColor){
+                     int fillColor, int arcColor){
 
         this.centerx = centerx;
         this.centery = centery;
@@ -50,12 +52,12 @@ public class DonutsArc {
         this.startDegree = startDegree - 90; // Start from top.
         this.endDegree = endDegree - 90;
         this.fillColor = fillColor;
-        this.borderColor = borderColor;
+        this.arcColor = arcColor;
 
-        this.paintArcBorder = new Paint();
-        paintArcBorder.setStyle(Paint.Style.STROKE);
-        paintArcBorder.setStrokeWidth(10);
-        paintArcBorder.setColor(borderColor);
+        this.paintArc = new Paint();
+        paintArc.setStyle(Paint.Style.FILL);
+        paintArc.setStrokeWidth(10);
+        paintArc.setColor(arcColor);
 
         this.innerRect = calculateRect(new RectF(), innerRadius);
         this.outerRect = calculateRect(new RectF(), outerRadius);
@@ -63,15 +65,43 @@ public class DonutsArc {
     }
     
     public void draw(Canvas canvas){
-
+/*
         canvas.drawArc(getInnerRect(), getStartAngle(), getSweepAngle(), false,
-                paintArcBorder);
+                paintArc);
+
         canvas.drawArc(getOuterRect(), getStartAngle(), getSweepAngle(), false,
-                paintArcBorder);
+                paintArc);
         canvas.drawLine(getStartX(innerRadius), getStartY(innerRadius),
-                getStartX(outerRadius), getStartY(outerRadius), paintArcBorder);
+                getStartX(outerRadius), getStartY(outerRadius), paintArc);
         canvas.drawLine(getEndX(innerRadius), getEndY(innerRadius),
-                getEndX(outerRadius), getEndY(outerRadius), paintArcBorder);
+                getEndX(outerRadius), getEndY(outerRadius), paintArc);
+  */
+        Path path = new Path();
+        path.moveTo(getStartX(innerRadius), getStartY(innerRadius));
+        path.lineTo(getStartX(outerRadius), getStartY(outerRadius));
+        path.arcTo(getOuterRect(), getStartAngle(), getSweepAngle());
+        path.lineTo(getEndX(innerRadius), getEndY(innerRadius));
+        path.arcTo(getInnerRect(), getEndAngle(), -getSweepAngle());
+        ///// Are you serious do I really have to tell you everything??
+        path.lineTo(getStartX(outerRadius), getStartY(outerRadius));
+        //Fill
+        canvas.drawPath(path, paintArc);
+        //Border
+        int darkerColor = darken(arcColor);
+        paintArc.setColor(darkerColor);
+        paintArc.setStyle(Paint.Style.STROKE);
+        canvas.drawPath(path, paintArc);
+        //Cleanup
+        paintArc.setColor(arcColor);
+        paintArc.setStyle(Paint.Style.STROKE);
+    }
+
+    public int darken(int color){
+        // hsv means hue saturation value, aka hue saturation brightness
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.8f; // value component (brightness)
+        return Color.HSVToColor(hsv);
     }
 
     public RectF calculateRect(RectF rect, double radius){
@@ -87,6 +117,9 @@ public class DonutsArc {
 
     public float getStartAngle(){
         return (float) this.startDegree;
+    }
+    public float getEndAngle(){
+        return (float) this.endDegree;
     }
 
     public float getSweepAngle(){
@@ -165,12 +198,12 @@ public class DonutsArc {
         this.fillColor = fillColor;
     }
 
-    public int getBorderColor() {
-        return borderColor;
+    public int getArcColor() {
+        return arcColor;
     }
 
-    public void setBorderColor(int borderColor) {
-        this.borderColor = borderColor;
+    public void setArcColor(int arcColor) {
+        this.arcColor = arcColor;
     }
 
     public RectF getInnerRect() {
