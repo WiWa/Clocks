@@ -28,6 +28,9 @@ public class DonutsArc {
 
     private Paint paintArc;
 
+    private int division;
+    private int ranking;
+
     public DonutsArc(){
 
     }
@@ -228,4 +231,19 @@ public class DonutsArc {
         return outerRect;
     }
 
+    public int getDivision() {
+        return division;
+    }
+
+    public void setDivision(int division) {
+        this.division = division;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
 }

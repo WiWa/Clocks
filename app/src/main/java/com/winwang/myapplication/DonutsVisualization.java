@@ -10,6 +10,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.google.common.base.Function;
+
 import java.util.ArrayList;
 
 /**
@@ -79,7 +81,7 @@ public class DonutsVisualization extends View{
         mDonuts = new ArrayList<DonutsArc>();
 //        addArc(new DonutsArc(centerx, centery, innerRadius, outerRadius, 10, 90, Color.RED,Color.BLUE));
 
-        addArc(new DonutsArc(this, 10, 90, Color.RED,Color.BLUE));
+        addArc(new DonutsArc(this, 10, 90, Color.RED, Color.BLUE));
     }
 
     @Override
@@ -131,6 +133,94 @@ public class DonutsVisualization extends View{
                 paintArcBorder);
         */
         //canvas.drawArc();
+    }
+    /*
+        So it turns out this is pretty difficult,
+        at least compared to how difficult I thought it should be.
+        Since the clock has a set radius, I want to make each arc thinner or wider
+        depending on how many arcs it overlaps with, like how Google Calendar does it.
+
+        After a bit of thinking, I came up with this plan:
+        For any given event, what is the largest number of overlaps it must handle simultaneously?
+        To solve that problem, I realized that if I created a graph of all overlapping events,
+        then the answer to that problem for any given event is the answer to:
+        What is the size of largest fully-connected sub-graph that includes that event?
+        // I use "fully-connected" to mean all points connect to all other points.
+        So, make the overlap graph, which I will represent as a matrix because lazy,
+        check if an events connected nodes are connected to each other,
+        take the maximum of something and use it to calculate the width of the node's arc.
+
+        Then comes the problem of different-sized arcs overlapping.
+        I'll fix it like this: If an arc's list of other arcs that overlap it includes
+        an arc whose number of maximum overlaps (I call this an arc's division) surpasses
+        the length of the list of overlaps, then ignore (remove) that arc.
+        This should result in the other arcs in that list having a small division,
+        thus growing larger, and producing the visual effect of being laid under the smaller arc.
+
+        Then comes the problem of "what if there is a hole in between arcs where another arc can
+        fit?
+        My answer is to check an arc's list of overlaps, and find a missing ranking.
+        For example, if there were no holes, the innermost arc would be ranked 1, the second
+        ranked 2, etc. If there was a gap then the rankings wouldn't be consecutive,
+        so we just need to fill it in.
+
+        Sometimes the hole is larger than just one rank, but that can be taken care of by making
+        rankings a range. Let's worry about that later. Whoo, what a turn of events haha.
+     */
+    private void calculateDivisionRankings(){
+        /*
+        ArrayList<ArrayList<DonutsArc>> matrix_of_arcs = new ArrayList<ArrayList<DonutsArc>>();
+        for(DonutsArc arc1 : mDonuts){
+            ArrayList<DonutsArc> column_of_arcs = new ArrayList<DonutsArc>();
+            for(DonutsArc arc2 : mDonuts){
+                column_of_arcs.add(arc2);
+            }
+            matrix_of_arcs.add(column_of_arcs);
+        }*/
+        int[][] overlap_matrix = new int[mDonuts.size() + 1][mDonuts.size() + 1];
+        // initialize edges of matrix to be indices of arcs
+        // c for column, r for row
+        for(int c = 0; c < mDonuts.size() + 1; c++){
+            // Note that overlap_matrix[0][0] is null
+            if(c == 0){
+                for(int r = 1; r < mDonuts.size() + 1; r++){
+                    overlap_matrix[0][r] = r;
+                }
+            }
+            else {
+                overlap_matrix[c][0] = c;
+            }
+        }
+        // Populate matrix with 1 = overlap, 0 = no overlap
+        for(int c = 1; c < mDonuts.size() + 1; c++){
+            // Just need one half of the matrix because symmetry
+            DonutsArc a = mDonuts.get(overlap_matrix[c][0]);
+            for(int r = 1; r < c + 1; r++){
+                DonutsArc b = mDonuts.get(overlap_matrix[0][r]);
+                if(arcsOverlap(a, b)){
+                    overlap_matrix[c][r] = 1;
+                }
+                else{
+                    overlap_matrix[c][r] = 0;
+                }
+            }
+        }
+        // for each arc, find that arc's largest "fully connected graph"
+        for(int r = 1; r < mDonuts.size() + 1; r++){
+            DonutsArc a = mDonuts.get(overlap_matrix[0][r]);
+            int maximum_overlaps = 0;
+            for(int c = r; c < mDonuts.size() + 1; c++){
+                boolean overlap = overlap_matrix[c][r] > 0;
+                if(overlap){
+                    
+                }
+            }
+
+        }
+    }
+
+    public boolean arcsOverlap(DonutsArc a, DonutsArc b){
+        return b.getStartDegree() < a.getEndDegree() && b.getEndDegree() > a.getStartDegree();
     }
 
     public void addArc(DonutsArc arc){
