@@ -149,6 +149,9 @@ public class DonutsVisualization extends View{
         So, make the overlap graph, which I will represent as a matrix because lazy,
         check if an events connected nodes are connected to each other,
         take the maximum of something and use it to calculate the width of the node's arc.
+        Edit: Wow, how do you find a node's largest fully-connected subgraph efficiently?!
+        Edit2: Okay turns out fully-coneccted has a name: complete. And turns out a complete
+        subgraph's set of vertices is called a clique. And this is the clique problem? Okay then.
 
         Then comes the problem of different-sized arcs overlapping.
         I'll fix it like this: If an arc's list of other arcs that overlap it includes
@@ -206,13 +209,14 @@ public class DonutsVisualization extends View{
             }
         }
         // for each arc, find that arc's largest "fully connected graph"
+        // Oh my god how do you do it.
         for(int r = 1; r < mDonuts.size() + 1; r++){
             DonutsArc a = mDonuts.get(overlap_matrix[0][r]);
             int maximum_overlaps = 0;
             for(int c = r; c < mDonuts.size() + 1; c++){
                 boolean overlap = overlap_matrix[c][r] > 0;
                 if(overlap){
-                    
+
                 }
             }
 
