@@ -152,6 +152,11 @@ public class DonutsVisualization extends View{
         Edit: Wow, how do you find a node's largest fully-connected subgraph efficiently?!
         Edit2: Okay turns out fully-coneccted has a name: complete. And turns out a complete
         subgraph's set of vertices is called a clique. And this is the clique problem? Okay then.
+        Edit3: Got it. Possibly. Take an event's row in the overlap matrix. Only consider the
+        columns where the row has a 1 (this is the list of the event's overlaps). The relevant
+        sub-matrix we're interested in is where the top row is the event's overlap row (should be
+         all 1's). The maximum clique the event is in, and thus the number of simultaneous
+         overlaps the event has, is the number of rows filled with 1's (no 0's).
 
         Then comes the problem of different-sized arcs overlapping.
         I'll fix it like this: If an arc's list of other arcs that overlap it includes

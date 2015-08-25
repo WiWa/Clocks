@@ -14,6 +14,10 @@ import android.widget.Toast;
  */
 public class DonutsArc {
 
+    public static final int PAD_DEGREES = 0;
+    public static final int PAD_RADIUS = 1;
+    public static final int PAD_DEGREES_AND_RADIUS = 2;
+
     private double centerx;
     private double centery;
     private double innerRadius;
@@ -22,6 +26,9 @@ public class DonutsArc {
     private double endDegree;
     private int fillColor;
     private int arcColor;
+
+    private double paddingDegrees = 1;
+    private double paddingRadiusPercent = 0.02;
 
     private RectF innerRect;
     private RectF outerRect;
@@ -54,6 +61,7 @@ public class DonutsArc {
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
         this.startDegree = startDegree - 90; // Start from top.
+        this.endDegree = Math.max(this.endDegree, 360); // Maximum of 360
         this.endDegree = endDegree - 90;
         this.fillColor = fillColor;
         this.arcColor = arcColor;
@@ -62,6 +70,8 @@ public class DonutsArc {
         paintArc.setStyle(Paint.Style.FILL);
         paintArc.setStrokeWidth(10);
         paintArc.setColor(arcColor);
+
+        applyPadding(PAD_DEGREES_AND_RADIUS);
 
         this.innerRect = calculateRect(new RectF(), innerRadius);
         this.outerRect = calculateRect(new RectF(), outerRadius);
@@ -73,7 +83,7 @@ public class DonutsArc {
         canvas.drawArc(getInnerRect(), getStartAngle(), getSweepAngle(), false,
                 paintArc);
 
-        canvas.drawArc(getOuterRect(), getStartAngle(), getSweepAngle(), false,
+        canvas.drawArc(getOuterRect(), getStartAngle(), geapplyPadtSweepAngle(), false,
                 paintArc);
         canvas.drawLine(getStartX(innerRadius), getStartY(innerRadius),
                 getStartX(outerRadius), getStartY(outerRadius), paintArc);
@@ -172,6 +182,24 @@ public class DonutsArc {
         if(this.outerRadius != outerRadius){
             setOuterRadius(outerRadius);
             this.outerRect = calculateRect(this.outerRect, outerRadius);
+        }
+        applyPadding(PAD_RADIUS);
+    }
+
+    private void applyPadding(int mode){
+        if(mode == PAD_DEGREES){
+            this.startDegree += this.paddingDegrees;
+            this.endDegree -= this.paddingDegrees;
+        }
+        else if (mode == PAD_RADIUS){
+            this.innerRadius += this.innerRadius * paddingRadiusPercent;
+            this.outerRadius -= this.outerRadius * paddingRadiusPercent;
+        }
+        else if (mode == PAD_DEGREES_AND_RADIUS){
+            this.startDegree += this.paddingDegrees;
+            this.endDegree -= this.paddingDegrees;
+            this.innerRadius += this.innerRadius * paddingRadiusPercent;
+            this.outerRadius -= this.outerRadius * paddingRadiusPercent;
         }
     }
 
