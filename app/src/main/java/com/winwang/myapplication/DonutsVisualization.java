@@ -213,18 +213,55 @@ public class DonutsVisualization extends View{
                 }
             }
         }
-        // for each arc, find that arc's largest "fully connected graph"
-        // Oh my god how do you do it.
+        // for each arc, find that arc's largest "fully connected graph" (clique)
         for(int r = 1; r < mDonuts.size() + 1; r++){
             DonutsArc a = mDonuts.get(overlap_matrix[0][r]);
-            int maximum_overlaps = 0;
+            int overlaps = 0;
+            // build starting points for clique lists,
+            // so if event A overlapped with B, C, and E, we would have
+            // [B], [C], [E]. Then grow them
+            ArrayList<ArrayList<DonutsArc>> list_of_cliques = new ArrayList<ArrayList<DonutsArc>>();
+            ArrayList<DonutsArc> list_of_overlapping_arcs = new ArrayList<DonutsArc>();
             for(int c = r; c < mDonuts.size() + 1; c++){
                 boolean overlap = overlap_matrix[c][r] > 0;
                 if(overlap){
-
+                    overlaps++;
+                    ArrayList<DonutsArc> clique = new ArrayList<DonutsArc>();
+                    clique.add(mDonuts.get(overlap_matrix[c][0]));
+                    list_of_overlapping_arcs.add(clique.get(0));
                 }
             }
+            // If no overlaps, take up full radius, first of one.
+            if(overlaps == 0){
+                a.setDivision(1);
+                a.setRanking(1);
+            }
+            // Otherwise grow cliques
+            else{
+                // For each clique
+                for(ArrayList<DonutsArc> clique : list_of_cliques){
+                    // Go through the list of possible events to add
+                    for(DonutsArc event : list_of_overlapping_arcs){
+                        boolean inClique = true;
+                        // If the event overlaps with the events already in the clique, add it
+                        for(DonutsArc event_in_clique : clique){
+                            if(!arcsOverlap(event, event_in_clique)){
+                                inClique = false;
+                            }
+                        }
+                        if(inClique){
+                            clique.add(event);
+                        }
+                    }
+                }
+                // Find the maximum clique.
+                int max = 1;
+                for(ArrayList<DonutsArc> clique : list_of_cliques){
+                    max = Math.max(max, clique.size());
+                }
+                // Let events know their divisions and rankings.
 
+            }
         }
     }
 
