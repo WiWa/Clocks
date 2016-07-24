@@ -1,4 +1,4 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import static com.winwang.myapplication.DonutsArc.Ring.INNER;
+import static com.winwang.clocks.DonutsArc.Ring.INNER;
 
 /**
  * Created by wiwa on 8/18/15.

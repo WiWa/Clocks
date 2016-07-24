@@ -17,7 +17,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <com.winwang.myapplication.DonutsVisualization
+    <com.winwang.clocks.DonutsVisualization
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:id="@+id/dvClocks"

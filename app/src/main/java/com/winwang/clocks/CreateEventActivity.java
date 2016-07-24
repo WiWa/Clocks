@@ -1,4 +1,4 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import android.app.Activity;
 import android.content.Intent;

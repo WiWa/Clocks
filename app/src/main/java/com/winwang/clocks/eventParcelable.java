@@ -1,15 +1,9 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.model.ColorDefinition;
-import com.google.api.services.calendar.model.Colors;
-
 import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by wiwa on 8/16/15.

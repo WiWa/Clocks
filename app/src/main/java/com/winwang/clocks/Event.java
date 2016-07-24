@@ -1,4 +1,4 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import java.util.Calendar;
 import java.util.Date;

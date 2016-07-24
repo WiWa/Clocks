@@ -1,4 +1,4 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 
@@ -20,8 +19,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.winwang.myapplication.DonutsArc.Ring.INNER;
-import static com.winwang.myapplication.DonutsArc.Ring.OUTER;
+import static com.winwang.clocks.DonutsArc.Ring.INNER;
+import static com.winwang.clocks.DonutsArc.Ring.OUTER;
 
 public class MainActivity extends AppCompatActivity {
 

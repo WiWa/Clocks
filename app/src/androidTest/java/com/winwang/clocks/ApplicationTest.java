@@ -1,4 +1,4 @@
-package com.winwang.myapplication;
+package com.winwang.clocks;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
