@@ -57,7 +57,7 @@ public class GoogleCalendarQuickStart extends Activity {
 
     private Button mReturnResults;
     private boolean mDataReceived = false;
-    private List<com.google.api.services.calendar.model.Event> mEvents;
+    private List<com.google.api.services.calendar.model.Event> mEvents = new ArrayList<com.google.api.services.calendar.model.Event>();
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -359,16 +359,20 @@ public class GoogleCalendarQuickStart extends Activity {
 
     private ArrayList<String> getColorIDs(){
         ArrayList<String> colorIDs = new ArrayList<String>();
-        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
-            colorIDs.add(color.getKey());
+        if(colors != null){
+            for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+                colorIDs.add(color.getKey());
+            }
         }
         return colorIDs;
     }
 
     private ArrayList<String> getColorStrings(){
         ArrayList<String> colorStrs = new ArrayList<String>();
-        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
-            colorStrs.add(color.getValue().getBackground());
+        if(colors != null) {
+            for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+                colorStrs.add(color.getValue().getBackground());
+            }
         }
         return colorStrs;
     }

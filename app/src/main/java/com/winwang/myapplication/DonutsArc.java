@@ -7,7 +7,10 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import static com.winwang.myapplication.DonutsArc.Ring.INNER;
 
 /**
  * Created by wiwa on 8/18/15.
@@ -35,26 +38,30 @@ public class DonutsArc {
 
     private Paint paintArc;
 
-    private int division;
-    private int ranking;
-
-    public DonutsArc(){
-
+    public enum Ring {
+        INNER,
+        OUTER
     }
 
-    public DonutsArc(DonutsVisualization donutsVisualization, double
+    public static DonutsArc create(DonutsVisualization donutsVisualization, double
             startDegree, double endDegree,
-                     int fillColor, int arcColor){
-
-        this(donutsVisualization.getCenterX(), donutsVisualization.getCenterY(),
-                donutsVisualization.getInnerRadius(), donutsVisualization.getOuterRadius(),
-                startDegree, endDegree, fillColor,arcColor);
-
+                                   int fillColor, int arcColor, Ring ring) {
+        double innerRadius = donutsVisualization.getInnerRadius();
+        double outerRadius = donutsVisualization.getOuterRadius();
+        double width = (outerRadius - innerRadius) / 2;
+        if (ring == INNER) {
+            outerRadius -= width;
+        } else {
+            innerRadius += width;
+        }
+        return new DonutsArc(donutsVisualization.getCenterX(), donutsVisualization.getCenterY(),
+                innerRadius, outerRadius,
+                startDegree, endDegree, fillColor, arcColor);
     }
 
     public DonutsArc(double centerx, double centery, double innerRadius, double outerRadius, double
             startDegree, double endDegree,
-                     int fillColor, int arcColor){
+                     int fillColor, int arcColor) {
 
         this.centerx = centerx;
         this.centery = centery;
@@ -77,19 +84,8 @@ public class DonutsArc {
         this.outerRect = calculateRect(new RectF(), outerRadius);
 
     }
-    
-    public void draw(Canvas canvas){
-/*
-        canvas.drawArc(getInnerRect(), getStartAngle(), getSweepAngle(), false,
-                paintArc);
 
-        canvas.drawArc(getOuterRect(), getStartAngle(), geapplyPadtSweepAngle(), false,
-                paintArc);
-        canvas.drawLine(getStartX(innerRadius), getStartY(innerRadius),
-                getStartX(outerRadius), getStartY(outerRadius), paintArc);
-        canvas.drawLine(getEndX(innerRadius), getEndY(innerRadius),
-                getEndX(outerRadius), getEndY(outerRadius), paintArc);
-  */
+    public void draw(Canvas canvas) {
         Path path = new Path();
         path.moveTo(getStartX(innerRadius), getStartY(innerRadius));
         path.lineTo(getStartX(outerRadius), getStartY(outerRadius));
@@ -99,6 +95,7 @@ public class DonutsArc {
         ///// Are you serious do I really have to tell you everything??
         path.lineTo(getStartX(outerRadius), getStartY(outerRadius));
         //Fill
+        paintArc.setStyle(Paint.Style.FILL);
         canvas.drawPath(path, paintArc);
         //Border
         int darkerColor = darken(arcColor);
@@ -107,10 +104,9 @@ public class DonutsArc {
         canvas.drawPath(path, paintArc);
         //Cleanup
         paintArc.setColor(arcColor);
-        paintArc.setStyle(Paint.Style.STROKE);
     }
 
-    public int darken(int color){
+    public int darken(int color) {
         // hsv means hue saturation value, aka hue saturation brightness
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
@@ -118,40 +114,42 @@ public class DonutsArc {
         return Color.HSVToColor(hsv);
     }
 
-    public RectF calculateRect(RectF rect, double radius){
+    public RectF calculateRect(RectF rect, double radius) {
         double left = centerx - radius;
         double right = centerx + radius;
         double top = centery - radius;
         double bottom = centery + radius;
 
         rect.set((float) left, (float) top, (float) right, (float) bottom);
-
         return rect;
     }
 
-    public float getStartAngle(){
+    public float getStartAngle() {
         return (float) this.startDegree;
     }
-    public float getEndAngle(){
+
+    public float getEndAngle() {
         return (float) this.endDegree;
     }
 
-    public float getSweepAngle(){
+    public float getSweepAngle() {
         return (float) (this.endDegree - this.startDegree);
     }
 
-    public float getStartX(double radius){
+    public float getStartX(double radius) {
         return (float) (this.centerx + radius * Math.cos(Math.toRadians(startDegree)));
     }
-    public float getStartY(double radius){
-        return (float) (this.centery + radius * Math.sin(Math.toRadians(startDegree)) );
+
+    public float getStartY(double radius) {
+        return (float) (this.centery + radius * Math.sin(Math.toRadians(startDegree)));
     }
 
-    public float getEndX(double radius){
-        return (float) (this.centerx + radius * Math.cos(Math.toRadians(endDegree)) );
+    public float getEndX(double radius) {
+        return (float) (this.centerx + radius * Math.cos(Math.toRadians(endDegree)));
     }
-    public float getEndY(double radius){
-        return (float) (this.centery + radius * Math.sin(Math.toRadians(endDegree)) );
+
+    public float getEndY(double radius) {
+        return (float) (this.centery + radius * Math.sin(Math.toRadians(endDegree)));
     }
 
 
@@ -163,92 +161,51 @@ public class DonutsArc {
         this.centery = centery;
     }
 
-    public void updatePosition(double centerx, double centery){
-        if(this.centerx != centerx || this.centery != centery){
+    public void updatePosition(double centerx, double centery) {
+        if (this.centerx != centerx || this.centery != centery) {
             setCenterX(centerx);
             setCenterY(centery);
             this.innerRect = calculateRect(this.innerRect, innerRadius);
             this.outerRect = calculateRect(this.outerRect, outerRadius);
         }
     }
-    public void updateRadii(double innerRadius, double outerRadius) throws Exception{
-        if(outerRadius > innerRadius){
+
+    public void updateRadii(double innerRadius, double outerRadius) throws Exception {
+        if (outerRadius > innerRadius) {
             throw new Exception("Outer Radius can't be smaller than Inner Radius. Duh.");
         }
-        if(this.innerRadius != innerRadius){
+        if (this.innerRadius != innerRadius) {
             setInnerRadius(innerRadius);
             this.innerRect = calculateRect(this.innerRect, innerRadius);
         }
-        if(this.outerRadius != outerRadius){
+        if (this.outerRadius != outerRadius) {
             setOuterRadius(outerRadius);
             this.outerRect = calculateRect(this.outerRect, outerRadius);
         }
         applyPadding(PAD_RADIUS);
     }
 
-    private void applyPadding(int mode){
-        if(mode == PAD_DEGREES){
+    private void applyPadding(int mode) {
+        if (mode == PAD_DEGREES) {
             this.startDegree += this.paddingDegrees;
             this.endDegree -= this.paddingDegrees;
-        }
-        else if (mode == PAD_RADIUS){
+        } else if (mode == PAD_RADIUS) {
+            this.innerRadius += this.innerRadius * paddingRadiusPercent;
+            this.outerRadius -= this.outerRadius * paddingRadiusPercent;
+        } else if (mode == PAD_DEGREES_AND_RADIUS) {
+            this.startDegree += this.paddingDegrees;
+            this.endDegree -= this.paddingDegrees;
             this.innerRadius += this.innerRadius * paddingRadiusPercent;
             this.outerRadius -= this.outerRadius * paddingRadiusPercent;
         }
-        else if (mode == PAD_DEGREES_AND_RADIUS){
-            this.startDegree += this.paddingDegrees;
-            this.endDegree -= this.paddingDegrees;
-            this.innerRadius += this.innerRadius * paddingRadiusPercent;
-            this.outerRadius -= this.outerRadius * paddingRadiusPercent;
-        }
-    }
-
-    public double getInnerRadius() {
-        return innerRadius;
     }
 
     public void setInnerRadius(double innerRadius) {
         this.innerRadius = innerRadius;
     }
 
-    public double getOuterRadius() {
-        return outerRadius;
-    }
-
     public void setOuterRadius(double outerRadius) {
         this.outerRadius = outerRadius;
-    }
-
-    public double getStartDegree() {
-        return startDegree;
-    }
-
-    public void setStartDegree(double startDegree) {
-        this.startDegree = startDegree;
-    }
-
-    public double getEndDegree() {
-        return endDegree;
-    }
-
-    public void setEndDegree(double endDegree) {
-        this.endDegree = endDegree;
-    }
-
-    public int getFillColor() {
-        return fillColor;
-    }
-
-    public void setFillColor(int fillColor) {
-        this.fillColor = fillColor;
-    }
-
-    public int getArcColor() {
-        return arcColor;
-    }
-
-    public void setArcColor(int arcColor) {
-        this.arcColor = arcColor;
     }
 
     public RectF getInnerRect() {
@@ -257,21 +214,5 @@ public class DonutsArc {
 
     public RectF getOuterRect() {
         return outerRect;
-    }
-
-    public int getDivision() {
-        return division;
-    }
-
-    public void setDivision(int division) {
-        this.division = division;
-    }
-
-    public int getRanking() {
-        return ranking;
-    }
-
-    public void setRanking(int ranking) {
-        this.ranking = ranking;
     }
 }
