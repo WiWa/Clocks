@@ -4,11 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathEffect;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import static com.winwang.myapplication.DonutsArc.Ring.INNER;
 
@@ -95,11 +91,13 @@ public class DonutsArc {
         ///// Are you serious do I really have to tell you everything??
         path.lineTo(getStartX(outerRadius), getStartY(outerRadius));
         //Fill
+        paintArc.setAlpha(100);
         paintArc.setStyle(Paint.Style.FILL);
         canvas.drawPath(path, paintArc);
         //Border
         int darkerColor = darken(arcColor);
         paintArc.setColor(darkerColor);
+        paintArc.setAlpha(255);
         paintArc.setStyle(Paint.Style.STROKE);
         canvas.drawPath(path, paintArc);
         //Cleanup

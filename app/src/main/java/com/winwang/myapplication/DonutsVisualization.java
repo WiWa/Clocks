@@ -2,20 +2,13 @@ package com.winwang.myapplication;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.google.common.base.Function;
-
 import java.util.ArrayList;
-
-import static com.winwang.myapplication.DonutsArc.Ring.INNER;
 
 /**
  * Created by wiwa on 8/17/15.
@@ -31,10 +24,6 @@ public class DonutsVisualization extends View {
     private int centerx;
     private int centery;
     private int radius;
-
-    Paint paintText;
-    Paint paintArcBorder;
-    Paint paintArcFill;
 
     ArrayList<DonutsArc> mDonuts;
 
@@ -54,37 +43,17 @@ public class DonutsVisualization extends View {
         init();
     }
 
+    private void init() {
+        innerRadius = pxToDp(innerRadius);
+        outerRadius = pxToDp(outerRadius);
+        mDonuts = new ArrayList<>();
+    }
 
     public float pxToDp(float pix) {
-        return (float) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pix, getResources()
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pix, getResources()
                 .getDisplayMetrics());
     }
 
-    private void init() {
-
-        innerRadius = pxToDp(innerRadius);
-        outerRadius = pxToDp(outerRadius);
-
-        paintText = new Paint();
-        paintText.setTextSize(15);
-        paintText.setColor(Color.WHITE);
-
-        // used for arc filling
-        paintArcFill = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paintArcFill.setStyle(Paint.Style.FILL);
-        paintArcFill.setColor(Color.YELLOW);
-        paintArcFill.setAlpha(1);
-
-        // used for arc border
-        paintArcBorder = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paintArcBorder.setStyle(Paint.Style.STROKE);
-        paintArcBorder.setStrokeWidth(10);
-        paintArcBorder.setColor(Color.GREEN);
-        paintArcBorder.setAlpha(1);
-        Log.i(TAG, "Donuts init()");
-
-        mDonuts = new ArrayList<>();
-    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -92,9 +61,7 @@ public class DonutsVisualization extends View {
 
         width = getMeasuredWidth();
         height = getMeasuredHeight();
-
         setMeasuredDimension(width, height);
-
     }
 
     @Override
@@ -114,6 +81,11 @@ public class DonutsVisualization extends View {
             return;
         }
         mDonuts.add(arc);
+    }
+
+    public void clear() {
+        mDonuts.clear();
+        invalidate();
     }
 
     public int getCenterX() {

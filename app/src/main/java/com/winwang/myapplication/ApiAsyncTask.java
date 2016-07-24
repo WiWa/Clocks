@@ -2,20 +2,19 @@ package com.winwang.myapplication;
 
 import android.os.AsyncTask;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.DateTime;
-
-import com.google.api.services.calendar.model.*;
-import com.google.api.services.calendar.model.Calendar;
-import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Colors;
+import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * An asynchronous task that handles the Google Calendar API call.
@@ -42,7 +41,6 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
         JsonFactory jsonFactory = (JsonFactory) params[1];
         GoogleAccountCredential credential = (GoogleAccountCredential) params[2];
         try {
-            mActivity.clearResultsText();
             mActivity.updateResultsText(getDataFromApi());
 
         } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
@@ -70,20 +68,6 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//
-//// Print available calendar list entry colors
-//        for (Map.Entry<String, ColorDefinition> color : colors.getCalendar().entrySet()) {
-//            System.out.println("ColorId : " + color.getKey());
-//            System.out.println("  Background: " + color.getValue().getBackground());
-//            System.out.println("  Foreground: " + color.getValue().getForeground());
-//        }
-//
-//// Print available event colors
-//        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
-//            System.out.println("ColorId : " + color.getKey());
-//            System.out.println("  Background: " + color.getValue().getBackground());
-//            System.out.println("  Foreground: " + color.getValue().getForeground());
-//        }
 
         mActivity.setColors(colors);
 
@@ -96,7 +80,6 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
      * @throws IOException
      */
     private List<String> getDataFromApi() throws IOException {
-        // List the next 10 events from the primary calendar.
         //DateTime now = new DateTime(System.currentTimeMillis());
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime(new Date());
@@ -111,9 +94,8 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
 
         List<String> eventStrings = new ArrayList<String>();
         Events events = mActivity.mService.events().list("primary")
-                .setMaxResults(10)
                 .setTimeMin(lastMidnight)
-                //.setTimeMax(nextMidnight)
+                .setTimeMax(nextMidnight)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();

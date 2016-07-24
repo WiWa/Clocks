@@ -1,47 +1,31 @@
 package com.winwang.myapplication;
 
-        import com.google.android.gms.common.ConnectionResult;
-        import com.google.android.gms.common.GooglePlayServicesUtil;
-        import com.google.api.client.extensions.android.http.AndroidHttp;
-        import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-        import com.google.api.client.http.HttpTransport;
-        import com.google.api.client.json.JsonFactory;
-        import com.google.api.client.json.gson.GsonFactory;
-        import com.google.api.client.util.ExponentialBackOff;
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.ColorDefinition;
 
-        import com.google.api.services.calendar.*;
-        import com.google.api.services.calendar.model.*;
-        import com.google.api.services.calendar.model.Calendar;
-        import com.google.api.services.calendar.model.Event;
-
-        import android.accounts.AccountManager;
-        import android.app.Activity;
-        import android.app.Dialog;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.graphics.Typeface;
-        import android.net.ConnectivityManager;
-        import android.net.NetworkInfo;
-        import android.os.Bundle;
-        import android.os.Parcel;
-        import android.os.Parcelable;
-        import android.text.TextUtils;
-        import android.text.method.ScrollingMovementMethod;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.Button;
-        import android.widget.LinearLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
-
-        import java.io.IOException;
-        import java.lang.reflect.Array;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.List;
-        import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class GoogleCalendarQuickStart extends Activity {
     /**
@@ -52,11 +36,6 @@ public class GoogleCalendarQuickStart extends Activity {
     com.google.api.services.calendar.Calendar mService;
 
     GoogleAccountCredential credential;
-    private TextView mStatusText;
-    private TextView mResultsText;
-
-    private Button mReturnResults;
-    private boolean mDataReceived = false;
     private List<com.google.api.services.calendar.model.Event> mEvents = new ArrayList<com.google.api.services.calendar.model.Event>();
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -77,52 +56,6 @@ public class GoogleCalendarQuickStart extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout activityLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        activityLayout.setLayoutParams(lp);
-        activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
-
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        mStatusText = new TextView(this);
-        mStatusText.setLayoutParams(tlp);
-        mStatusText.setTypeface(null, Typeface.BOLD);
-        mStatusText.setText("Retrieving data...");
-        activityLayout.addView(mStatusText);
-
-        mResultsText = new TextView(this);
-        mResultsText.setLayoutParams(tlp);
-        mResultsText.setPadding(16, 16, 16, 16);
-        mResultsText.setVerticalScrollBarEnabled(true);
-        mResultsText.setMovementMethod(new ScrollingMovementMethod());
-        activityLayout.addView(mResultsText);
-/*
-        mReturnResults = new Button(this);
-        mReturnResults.setLayoutParams(tlp);
-        mReturnResults.setPadding(16, 16, 16, 16);
-        mReturnResults.setText("Load Events");
-        activityLayout.addView(mReturnResults);
-
-        mReturnResults.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mDataReceived){
-                    Toast.makeText(GoogleCalendarQuickStart.this, "Events Loaded", Toast.LENGTH_SHORT).show();
-                    returnResults();
-                }
-                else{
-                    Toast.makeText(GoogleCalendarQuickStart.this, "Cannot Load Events", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-*/
-        setContentView(activityLayout);
-
         // Initialize credentials and service object.
         SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
         credential = GoogleAccountCredential.usingOAuth2(
@@ -146,7 +79,7 @@ public class GoogleCalendarQuickStart extends Activity {
         if (isGooglePlayServicesAvailable()) {
             refreshResults();
         } else {
-            mStatusText.setText("Google Play Services required: " +
+            showToast("Google Play Services required: " +
                     "after installing, close and relaunch this app.");
         }
     }
@@ -185,7 +118,7 @@ public class GoogleCalendarQuickStart extends Activity {
                         editor.commit();
                     }
                 } else if (resultCode == RESULT_CANCELED) {
-                    mStatusText.setText("Account unspecified.");
+                    showToast("Account unspecified.");
                 }
                 break;
             case REQUEST_AUTHORIZATION:
@@ -210,7 +143,7 @@ public class GoogleCalendarQuickStart extends Activity {
             if (isDeviceOnline()) {
                 new ApiAsyncTask(this).execute(transport, jsonFactory, credential);
             } else {
-                mStatusText.setText("No network connection available.");
+                showToast("No network connection available.");
             }
         }
     }
@@ -224,8 +157,7 @@ public class GoogleCalendarQuickStart extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mStatusText.setText("Retrieving data…");
-                mResultsText.setText("");
+                showToast("Retrieving data…");
             }
         });
     }
@@ -241,13 +173,11 @@ public class GoogleCalendarQuickStart extends Activity {
             @Override
             public void run() {
                 if (dataStrings == null) {
-                    mStatusText.setText("Error retrieving data!");
+                    showToast("Error retrieving data!");
                 } else if (dataStrings.size() == 0) {
-                    mStatusText.setText("No data found.");
+                    showToast("No data found.");
                 } else {
-                    mStatusText.setText("Data retrieved using" +
-                            " the Google Calendar API:");
-                    mResultsText.setText(TextUtils.join("\n\n", dataStrings));
+                    showToast("Data refreshed.");
                 }
             }
         });
@@ -262,7 +192,7 @@ public class GoogleCalendarQuickStart extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mStatusText.setText(message);
+                showToast(message);
             }
         });
     }
@@ -328,7 +258,6 @@ public class GoogleCalendarQuickStart extends Activity {
 
     public void setEvents(List<com.google.api.services.calendar.model.Event> items){
         mEvents = items;
-        mDataReceived = true;
     }
 
     public void returnResults(){
@@ -342,7 +271,6 @@ public class GoogleCalendarQuickStart extends Activity {
             events[i] = parsedEvent;
             i++;
         }
-
 
         b.putParcelableArray("events", events);
         b.putStringArrayList("colorIDs", getColorIDs());
@@ -375,6 +303,10 @@ public class GoogleCalendarQuickStart extends Activity {
             }
         }
         return colorStrs;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 }

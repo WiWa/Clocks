@@ -5,12 +5,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
     <AnalogClock
         android:layout_width="match_parent"
         android:layout_height="220dp"
+        android:translationZ="1dp"
         android:id="@+id/analogClock"
         android:layout_alignParentTop="true"
-        android:layout_below="@+id/tvHW"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -22,7 +23,6 @@
         android:id="@+id/dvClocks"
 
         android:layout_alignParentTop="true"
-        android:layout_below="@+id/tvHW"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="10dp"
-        android:layout_below="@id/analogClock"
+        android:layout_below="@id/dvClocks"
         >
     </ListView>
 

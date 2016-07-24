@@ -2,9 +2,9 @@ package com.winwang.myapplication;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Parcelable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import java.util.List;
 import static com.winwang.myapplication.DonutsArc.Ring.INNER;
 import static com.winwang.myapplication.DonutsArc.Ring.OUTER;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     final String TAG = "MainActivity";
     final List<Event> eventsList = new ArrayList<>();
@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
         });
         eventsListView.setAdapter(mEventsAdapter);
 
-        // init donit visualization
+        // init donut visualization
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime(new Date());
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
@@ -80,47 +80,31 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(googleCalendarIntent, 0);
     }
 
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_refresh:
+                getGoogleCalendarData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        /*
-        if (id == R.id.action_myitem) {
-            Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
-            startActivityForResult(googleCalendarIntent, GOOGLE_CALENDAR_EVENTS);
-        }
-        */
-
-        return super.onOptionsItemSelected(item);
     }
 
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (resultCode == RESULT_OK) {
+            clearAllEvents();
+
             ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
             ArrayList<String> colors = data.getExtras().getStringArrayList("colors");
             Parcelable[] uncastevents = data.getExtras().getParcelableArray("events");
-
-            Log.d(TAG, "Google Events Received:  " + uncastevents);
 
             for (Parcelable uncastEvent : uncastevents) {
                 eventParcelable castEvent = (eventParcelable) uncastEvent;
@@ -141,16 +125,6 @@ public class MainActivity extends ActionBarActivity {
                 for (DonutsArc arc : arcsFromEvent(event)) {
                     mDonuts.addArc(arc);
                 }
-            }
-
-            String colorIDstring = "";
-            for (String colorID : colorIDs) {
-                colorIDstring += colorID + ", ";
-            }
-
-            String colorstring = "";
-            for (String color : colors) {
-                colorstring += color + ", ";
             }
 
             mEventsAdapter.notifyDataSetChanged();
@@ -190,6 +164,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return Arrays.asList(inner, outer);
+    }
+
+    private void clearAllEvents(){
+        eventsList.clear();
+        mEventsAdapter.notifyDataSetChanged();
+        mDonuts.clear();
     }
 
     double msToDegree(double ms) {
