@@ -28,11 +28,11 @@ public class Event{
         endDate = c.getTime();
     }
 
-    Event(eventParcelable event){
+    Event(EventParcelable event){
         this(event, "#a4bdfc");
     }
 
-    Event(eventParcelable event, String color){
+    Event(EventParcelable event, String color){
         name = event.getmSummary();
         description = event.getmDescription();
         startDate = new Date(event.getmStartTime());

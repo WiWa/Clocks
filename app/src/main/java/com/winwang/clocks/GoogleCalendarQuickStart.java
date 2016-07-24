@@ -264,10 +264,10 @@ public class GoogleCalendarQuickStart extends Activity {
         Intent resultIntent = new Intent();
         Bundle b = new Bundle();
 
-        eventParcelable[] events = new eventParcelable[mEvents.size()];
+        EventParcelable[] events = new EventParcelable[mEvents.size()];
         int i = 0;
         for(com.google.api.services.calendar.model.Event event : mEvents){
-            eventParcelable parsedEvent = new eventParcelable(event);
+            EventParcelable parsedEvent = new EventParcelable(event);
             events[i] = parsedEvent;
             i++;
         }

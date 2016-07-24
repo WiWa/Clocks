@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +54,11 @@ public class MainActivity extends AppCompatActivity {
         });
         eventsListView.setAdapter(mEventsAdapter);
 
-        // init donut visualization
+        initTimes();
+        getGoogleCalendarData();
+    }
+
+    private void initTimes(){
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime(new Date());
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
@@ -68,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
         c.add(java.util.Calendar.DATE, 1);
         nextMidnight = new DateTime(c.getTime());
-
-        Log.d(TAG, "Main Activity Created :3");
-
-        getGoogleCalendarData();
     }
 
     private void getGoogleCalendarData() {
@@ -99,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         if (resultCode == RESULT_OK) {
+            initTimes();
             clearAllEvents();
 
             ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
@@ -106,14 +106,10 @@ public class MainActivity extends AppCompatActivity {
             Parcelable[] uncastevents = data.getExtras().getParcelableArray("events");
 
             for (Parcelable uncastEvent : uncastevents) {
-                eventParcelable castEvent = (eventParcelable) uncastEvent;
+                EventParcelable castEvent = (EventParcelable) uncastEvent;
                 int colorIndex = colorIDs.indexOf(castEvent.getmColorID());
                 Event event = new Event(castEvent);
 
-                // Only deal with events bound by today
-                if (!isToday(event)) {
-                    continue;
-                }
                 String eventColor = "None";
                 if (colorIndex >= 0) {
                     eventColor = colors.get(colorIndex);

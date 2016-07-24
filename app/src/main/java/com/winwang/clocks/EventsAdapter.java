@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class EventsAdapter extends ArrayAdapter<Event> {
     private List<Event> events;
+    private SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
 
     public EventsAdapter(Context context, int tvResId, List<Event> events){
         super(context, tvResId, events);
@@ -40,16 +42,19 @@ public class EventsAdapter extends ArrayAdapter<Event> {
             }
             if (description != null) {
                 description.setText(event.getDescription());
+                if(event.getDescription().isEmpty()){
+                    description.setVisibility(View.GONE);
+                }
             }
             if (startDate != null) {
-                startDate.setText(event.getStartDate().toString());
+                startDate.setText("From: "+formatter.format(event.getStartDate()));
             }
             if (endDate != null) {
                 if(event.getEndDate().getTime() == 0){
-                    endDate.setText("N/A");
+                    endDate.setVisibility(View.GONE);
                 }
                 else {
-                    endDate.setText(event.getEndDate().toString());
+                    endDate.setText("Until: " + formatter.format(event.getEndDate()));
                 }
             }
         }

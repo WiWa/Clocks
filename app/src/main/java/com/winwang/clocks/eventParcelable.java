@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by wiwa on 8/16/15.
  */
-public class eventParcelable implements Parcelable{
+public class EventParcelable implements Parcelable{
 
     private String mSummary;
     private String mDescription;
@@ -18,13 +18,13 @@ public class eventParcelable implements Parcelable{
     private String mColorID;
 
     //// the data structure.
-    public eventParcelable(com.google.api.services.calendar.model.Event event) {
+    public EventParcelable(com.google.api.services.calendar.model.Event event) {
         mSummary = event.getSummary();
         if(event.getDescription() != null){
             mDescription = event.getDescription();
         }
         else{
-            mDescription = "No Description";
+            mDescription = "";
         }
         if(event.getStart().getDateTime() != null){
             mStartTime = event.getStart().getDateTime().getValue();
@@ -56,7 +56,7 @@ public class eventParcelable implements Parcelable{
 //        }
     }
 
-    private eventParcelable(Parcel in) {
+    private EventParcelable(Parcel in) {
         mSummary = in.readString();
         mDescription = in.readString();
         mStartTime = in.readLong();
@@ -69,13 +69,13 @@ public class eventParcelable implements Parcelable{
         return 0;
     }
 
-    public static final Parcelable.Creator<eventParcelable> CREATOR =
-            new Parcelable.Creator<eventParcelable>() {
-                public eventParcelable createFromParcel(Parcel in) {
-                    return new eventParcelable(in);
+    public static final Parcelable.Creator<EventParcelable> CREATOR =
+            new Parcelable.Creator<EventParcelable>() {
+                public EventParcelable createFromParcel(Parcel in) {
+                    return new EventParcelable(in);
                 }
-                public eventParcelable[] newArray(int size) {
-                    return new eventParcelable[size];
+                public EventParcelable[] newArray(int size) {
+                    return new EventParcelable[size];
                 }
             };
 
@@ -88,7 +88,7 @@ public class eventParcelable implements Parcelable{
     }
 
     public String toString() {
-        String myString = "eventParcelable{ ";
+        String myString = "EventParcelable{ ";
         myString += "Summary: " + mSummary;
         myString += "Description: " + mDescription;
         myString += "Start: " + (new Date(mStartTime)).toString() + ", " + String.valueOf(mStartTime);
