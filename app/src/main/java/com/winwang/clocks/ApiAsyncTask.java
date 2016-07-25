@@ -21,14 +21,16 @@ import java.util.List;
  * Placing the API calls in their own task ensures the UI stays responsive.
  */
 public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
-    private GoogleCalendarQuickStart mActivity;
+    private final GoogleCalendarQuickStart mActivity;
+    private final Date date;
 
     /**
      * Constructor.
      * @param activity GoogleCalendarQuickStart that spawned this task.
      */
-    ApiAsyncTask(GoogleCalendarQuickStart activity) {
+    ApiAsyncTask(GoogleCalendarQuickStart activity, Date date) {
         this.mActivity = activity;
+        this.date = date;
     }
 
     /**
@@ -82,7 +84,7 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
     private List<String> getDataFromApi() throws IOException {
         //DateTime now = new DateTime(System.currentTimeMillis());
         java.util.Calendar c = java.util.Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(date);
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
         c.set(java.util.Calendar.MINUTE, 0);
         c.set(java.util.Calendar.SECOND, 0);
@@ -110,8 +112,7 @@ public class ApiAsyncTask extends AsyncTask<Object, Void, Void> {
                 // the start date.
                 start = event.getStart().getDate();
             }
-            eventStrings.add(
-                    String.format("%s (%s)", event.getSummary(), start));
+            eventStrings.add(String.format("%s (%s)", event.getSummary(), start));
         }
         return eventStrings;
     }

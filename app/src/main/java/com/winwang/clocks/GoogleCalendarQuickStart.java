@@ -24,6 +24,7 @@ import com.google.api.services.calendar.model.ColorDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +37,11 @@ public class GoogleCalendarQuickStart extends Activity {
     com.google.api.services.calendar.Calendar mService;
 
     GoogleAccountCredential credential;
-    private List<com.google.api.services.calendar.model.Event> mEvents = new ArrayList<com.google.api.services.calendar.model.Event>();
+    private List<com.google.api.services.calendar.model.Event> mEvents = new ArrayList<>();
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    private final Date date = new Date();
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -48,6 +50,7 @@ public class GoogleCalendarQuickStart extends Activity {
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
     private com.google.api.services.calendar.model.Colors colors;
+
 
     /**
      * Create the main activity.
@@ -67,6 +70,11 @@ public class GoogleCalendarQuickStart extends Activity {
                 transport, jsonFactory, credential)
                 .setApplicationName("Google Calendar API Android Quickstart")
                 .build();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            date.setTime(extras.getLong("date"));
+        }
     }
 
     /**
@@ -141,7 +149,7 @@ public class GoogleCalendarQuickStart extends Activity {
             chooseAccount();
         } else {
             if (isDeviceOnline()) {
-                new ApiAsyncTask(this).execute(transport, jsonFactory, credential);
+                new ApiAsyncTask(this, date).execute(transport, jsonFactory, credential);
             } else {
                 showToast("No network connection available.");
             }

@@ -14,6 +14,7 @@ public class EventParcelable implements Parcelable{
     private String mDescription;
     private long mStartTime;
     private long mEndTime;
+    private boolean allDay = false;
 
     private String mColorID;
 
@@ -31,6 +32,9 @@ public class EventParcelable implements Parcelable{
         }
         else if(event.getStart().getDate() != null){
             mStartTime = event.getStart().getDate().getValue();
+            if (event.getStart().getDate().isDateOnly()){
+                allDay = true;
+            }
         }
         else{
             mStartTime = 0;
@@ -48,12 +52,6 @@ public class EventParcelable implements Parcelable{
         if(mColorID == null){
             mColorID = "1";
         }
-//        if(event.isEndTimeUnspecified()){
-//            mEndTime = 0;
-//        }
-//        else{
-//            mEndTime = event.getEnd().getDate().getValue();
-//        }
     }
 
     private EventParcelable(Parcel in) {
@@ -61,7 +59,17 @@ public class EventParcelable implements Parcelable{
         mDescription = in.readString();
         mStartTime = in.readLong();
         mEndTime = in.readLong();
+        allDay = in.readByte() != 0;
         mColorID = in.readString();
+    }
+
+    public void writeToParcel(Parcel p, int flag) {
+        p.writeString(mSummary);
+        p.writeString(mDescription);
+        p.writeLong(mStartTime);
+        p.writeLong(mEndTime);
+        p.writeByte((byte) (allDay ? 1 : 0));
+        p.writeString(mColorID);
     }
 
     @Override
@@ -78,14 +86,6 @@ public class EventParcelable implements Parcelable{
                     return new EventParcelable[size];
                 }
             };
-
-    public void writeToParcel(Parcel p, int flag) {
-        p.writeString(mSummary);
-        p.writeString(mDescription);
-        p.writeLong(mStartTime);
-        p.writeLong(mEndTime);
-        p.writeString(mColorID);
-    }
 
     public String toString() {
         String myString = "EventParcelable{ ";
@@ -117,6 +117,10 @@ public class EventParcelable implements Parcelable{
 
     public long getmEndTime() {
         return mEndTime;
+    }
+
+    public boolean isAllDay() {
+        return allDay;
     }
 
     public String getmColorID() {

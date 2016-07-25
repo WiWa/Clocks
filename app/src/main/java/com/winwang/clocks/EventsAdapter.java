@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class EventsAdapter extends ArrayAdapter<Event> {
     private List<Event> events;
-    private SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+    private SimpleDateFormat formatter = new SimpleDateFormat("E h:mm a");
 
     public EventsAdapter(Context context, int tvResId, List<Event> events){
         super(context, tvResId, events);
@@ -35,8 +35,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         if (event != null) {
             TextView name = (TextView) v.findViewById(R.id.tvEventName);
             TextView description = (TextView) v.findViewById(R.id.tvEventDescription);
-            TextView startDate = (TextView) v.findViewById(R.id.tvEventStart);
-            TextView endDate = (TextView) v.findViewById(R.id.tvEventEnd);
+            TextView timeText = (TextView) v.findViewById(R.id.tvEventTimes);
             if (name != null) {
                 name.setText(event.getName());
             }
@@ -46,16 +45,22 @@ public class EventsAdapter extends ArrayAdapter<Event> {
                     description.setVisibility(View.GONE);
                 }
             }
-            if (startDate != null) {
-                startDate.setText("From: "+formatter.format(event.getStartDate()));
-            }
-            if (endDate != null) {
-                if(event.getEndDate().getTime() == 0){
-                    endDate.setVisibility(View.GONE);
+            if (timeText != null) {
+                StringBuilder timeString = new StringBuilder();
+                if (event.isAllDay()){
+                    timeString.append(new SimpleDateFormat("E").format(event.getEndDate()));
+                    timeString.append(" All Day");
+                } else {
+                    long endTime = event.getEndDate().getTime();
+                    timeString.append(formatter.format(event.getStartDate()));
+                    if (endTime == 0) {
+                        timeString.append(" onwards");
+                    } else if (endTime != event.getStartDate().getTime()) {
+                        timeString.append(" - ");
+                        timeString.append(formatter.format(event.getEndDate()));
+                    }
                 }
-                else {
-                    endDate.setText("Until: " + formatter.format(event.getEndDate()));
-                }
+                timeText.setText(timeString);
             }
         }
 

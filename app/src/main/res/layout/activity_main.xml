@@ -1,43 +1,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context=".MainActivity">
 
 
     <AnalogClock
+        android:id="@+id/analogClock"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:translationZ="1dp"
-        android:id="@+id/analogClock"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:translationZ="1dp"/>
 
     <com.winwang.clocks.DonutsVisualization
+        android:id="@+id/dvClocks"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:id="@+id/dvClocks"
 
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
 
         />
 
     <ListView
-        android:id="@+id/EventsList"
+        android:id="@+id/eventsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
         android:layout_below="@id/dvClocks"
+        android:paddingTop="10dp"
         >
     </ListView>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Events Today!"
+        android:textSize="42dp"
+        android:visibility="gone"
+        />
 
 
 </RelativeLayout>

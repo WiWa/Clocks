@@ -12,7 +12,7 @@ public class Event{
     private String description;
     private Date startDate;
     private Date endDate;
-
+    private boolean allDay = false;
     private String color;
 
     Event(){
@@ -37,6 +37,7 @@ public class Event{
         description = event.getmDescription();
         startDate = new Date(event.getmStartTime());
         endDate = new Date(event.getmEndTime());
+        allDay = event.isAllDay();
         this.color = color;
     }
 
@@ -89,6 +90,10 @@ public class Event{
     public String getDescription() { return description; }
     public Date getStartDate() { return startDate; }
     public Date getEndDate() { return endDate; }
+
+    public boolean isAllDay() {
+        return allDay;
+    }
 
     public String getColor() {
         return color;

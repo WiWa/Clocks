@@ -15,8 +15,13 @@ import com.google.api.client.util.DateTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import rx.functions.Action1;
+import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 import static com.winwang.clocks.DonutsArc.Ring.INNER;
 import static com.winwang.clocks.DonutsArc.Ring.OUTER;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView eventsListView;
     private EventsAdapter mEventsAdapter;
     private DonutsVisualization mDonuts;
+    private final BehaviorSubject<Date> dateToLookAt = BehaviorSubject.create(new Date());
     DateTime lastMidnight;
     DateTime noon;
     DateTime nextMidnight;
@@ -39,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        eventsListView = (ListView) findViewById(R.id.EventsList);
+        eventsListView = (ListView) findViewById(R.id.eventsList);
         mDonuts = (DonutsVisualization) findViewById(R.id.dvClocks);
 
         // init events list
         eventsListView.setClickable(true);
-        mEventsAdapter = new EventsAdapter(this, R.id.EventsList, eventsList);
+        mEventsAdapter = new EventsAdapter(this, R.id.eventsList, eventsList);
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -52,15 +58,44 @@ public class MainActivity extends AppCompatActivity {
 //                showToast(eventsList.get(position).getName() + ", " + String.valueOf(index));
             }
         });
+        eventsListView.setEmptyView(findViewById(R.id.empty));
         eventsListView.setAdapter(mEventsAdapter);
 
-        initTimes();
-        getGoogleCalendarData();
+        dateToLookAt.subscribe(new Action1<Date>() {
+            @Override
+            public void call(Date date) {
+                refreshData(date);
+            }
+        });
     }
 
-    private void initTimes(){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                setDateToLookAt(dateToLookAt.getValue());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void refreshData(Date date) {
+        initTimes(date);
+        Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
+        googleCalendarIntent.putExtra("date", date.getTime());
+        startActivityForResult(googleCalendarIntent, 0);
+    }
+
+    private void initTimes(Date date) {
         java.util.Calendar c = java.util.Calendar.getInstance();
-        c.setTime(new Date());
+        c.setTime(date);
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
         c.set(java.util.Calendar.MINUTE, 0);
         c.set(java.util.Calendar.SECOND, 0);
@@ -73,32 +108,8 @@ public class MainActivity extends AppCompatActivity {
         nextMidnight = new DateTime(c.getTime());
     }
 
-    private void getGoogleCalendarData() {
-        Intent googleCalendarIntent = new Intent(MainActivity.this, GoogleCalendarQuickStart.class);
-        startActivityForResult(googleCalendarIntent, 0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_refresh:
-                getGoogleCalendarData();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            initTimes();
             clearAllEvents();
 
             ArrayList<String> colorIDs = data.getExtras().getStringArrayList("colorIDs");
@@ -128,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<DonutsArc> arcsFromEvent(Event event) {
+        if (event.isAllDay()) {
+            return Collections.emptyList();
+        }
         double msStart = event.msSinceMidnight(event.getStartDate());
         double msEnd = event.msSinceMidnight(event.getEndDate());
 
@@ -161,19 +175,25 @@ public class MainActivity extends AppCompatActivity {
         return Arrays.asList(inner, outer);
     }
 
-    private void clearAllEvents(){
+    private void clearAllEvents() {
         eventsList.clear();
         mEventsAdapter.notifyDataSetChanged();
         mDonuts.clear();
     }
 
-    double msToDegree(double ms) {
-        return (ms / MS_IN_A_DAY) * 360 * 2; // 12 hours clock
+    public void setDateToLookAt(Date newDate) {
+        this.dateToLookAt.onNext(newDate);
     }
 
-    private boolean isToday(Event event) {
-        return event.getStartDate().getTime() > lastMidnight.getValue()
-                && event.getEndDate().getTime() < nextMidnight.getValue();
+    private Date addDays(Date today, int days){
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        c.setTime(today);
+        c.add(java.util.Calendar.DATE, days);
+        return c.getTime();
+    }
+
+    double msToDegree(double ms) {
+        return (ms / MS_IN_A_DAY) * 360 * 2; // 12 hours clock
     }
 
 

@@ -44,11 +44,11 @@ public class DonutsArc {
                                    int fillColor, int arcColor, Ring ring) {
         double innerRadius = donutsVisualization.getInnerRadius();
         double outerRadius = donutsVisualization.getOuterRadius();
-        double width = (outerRadius - innerRadius) / 2;
+        double halfWidth = (outerRadius - innerRadius) / 2;
         if (ring == INNER) {
-            outerRadius -= width;
+            outerRadius -= halfWidth * 1.15;
         } else {
-            innerRadius += width;
+            innerRadius += halfWidth * 1.15;
         }
         return new DonutsArc(donutsVisualization.getCenterX(), donutsVisualization.getCenterY(),
                 innerRadius, outerRadius,
@@ -168,21 +168,6 @@ public class DonutsArc {
         }
     }
 
-    public void updateRadii(double innerRadius, double outerRadius) throws Exception {
-        if (outerRadius > innerRadius) {
-            throw new Exception("Outer Radius can't be smaller than Inner Radius. Duh.");
-        }
-        if (this.innerRadius != innerRadius) {
-            setInnerRadius(innerRadius);
-            this.innerRect = calculateRect(this.innerRect, innerRadius);
-        }
-        if (this.outerRadius != outerRadius) {
-            setOuterRadius(outerRadius);
-            this.outerRect = calculateRect(this.outerRect, outerRadius);
-        }
-        applyPadding(PAD_RADIUS);
-    }
-
     private void applyPadding(int mode) {
         if (mode == PAD_DEGREES) {
             this.startDegree += this.paddingDegrees;
@@ -196,14 +181,6 @@ public class DonutsArc {
             this.innerRadius += this.innerRadius * paddingRadiusPercent;
             this.outerRadius -= this.outerRadius * paddingRadiusPercent;
         }
-    }
-
-    public void setInnerRadius(double innerRadius) {
-        this.innerRadius = innerRadius;
-    }
-
-    public void setOuterRadius(double outerRadius) {
-        this.outerRadius = outerRadius;
     }
 
     public RectF getInnerRect() {
