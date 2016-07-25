@@ -21,7 +21,6 @@ import java.util.List;
 
 import rx.functions.Action1;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
 
 import static com.winwang.clocks.DonutsArc.Ring.INNER;
 import static com.winwang.clocks.DonutsArc.Ring.OUTER;
